@@ -1,0 +1,4 @@
+.*.sw?
+*~
+_build
+.ipynb_checkpoints
