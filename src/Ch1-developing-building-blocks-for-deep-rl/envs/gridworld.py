@@ -9,7 +9,7 @@ EMPTY = BLACK = 0
 WALL = GRAY = 1
 AGENT = BLUE = 2
 MINE = RED = 3
-TARGET = GREEN = 4
+GOAL = GREEN = 4
 SUCCESS = PINK = 5
 
 # RGB color value table
@@ -33,7 +33,6 @@ RIGHT = 4
 class GridworldEnv(gym.Env):
     def __init__(self):
         # Observations
-        self.img_shape = [256, 256, 3]
         self.grid_layout = """
         1 1 1 1 1 1 1 1
         1 2 0 0 0 0 0 1
@@ -50,6 +49,7 @@ class GridworldEnv(gym.Env):
         self.observation_space = gym.spaces.Box(
             low=0, high=6, shape=self.grid_state.shape
         )
+        self.img_shape = [256, 256, 3]
         self.metadata = {"render.modes": ["human"]}
         # Actions
         self.action_space = gym.spaces.Discrete(5)
@@ -61,7 +61,7 @@ class GridworldEnv(gym.Env):
             LEFT: [0, -1],
             RIGHT: [0, 1],
         }
-        (self.agent_start_state, self.agent_target_state,) = self.get_state()
+        (self.agent_start_state, self.agent_goal_state,) = self.get_state()
 
         self.viewer = None
 
@@ -93,7 +93,7 @@ class GridworldEnv(gym.Env):
             info["success"] = False
             reward = -0.1
             return self.grid_state, reward, False, info
-        elif next_state == TARGET:
+        elif next_state == GOAL:
             done = True
             reward = 1
         elif next_state == MINE:
@@ -108,12 +108,12 @@ class GridworldEnv(gym.Env):
 
     def reset(self):
         self.grid_state = copy.deepcopy(self.initial_grid_state)
-        (self.agent_state, self.agent_target_state,) = self.get_state()
+        (self.agent_state, self.agent_goal_state,) = self.get_state()
         return self.grid_state
 
     def get_state(self):
         start_state = np.where(self.grid_state == AGENT)
-        goal_state = np.where(self.grid_state == TARGET)
+        goal_state = np.where(self.grid_state == GOAL)
 
         start_or_goal_not_found = not (start_state[0] and goal_state[0])
         if start_or_goal_not_found:
