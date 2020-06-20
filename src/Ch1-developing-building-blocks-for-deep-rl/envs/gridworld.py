@@ -34,7 +34,7 @@ class GridworldEnv(gym.Env):
     def __init__(self):
         # Observations
         self.img_shape = [256, 256, 3]
-        grid_layout = """
+        self.grid_layout = """
         1 1 1 1 1 1 1 1
         1 2 0 0 0 0 0 1
         1 0 1 1 1 0 0 1
@@ -44,7 +44,7 @@ class GridworldEnv(gym.Env):
         1 0 0 0 0 0 0 1
         1 1 1 1 1 1 1 1
         """
-        self.initial_grid_state = np.fromstring(grid_layout, dtype=int, sep=" ")
+        self.initial_grid_state = np.fromstring(self.grid_layout, dtype=int, sep=" ")
         self.initial_grid_state = self.initial_grid_state.reshape(8, 8)
         self.grid_state = copy.deepcopy(self.initial_grid_state)
         self.observation_space = gym.spaces.Box(
@@ -125,3 +125,41 @@ class GridworldEnv(gym.Env):
         goal_state = (goal_state[0][0], goal_state[1][0])
 
         return start_state, goal_state
+
+    def gridarray_to_image(self, img_shape=None):
+        if img_shape is None:
+            img_shape = self.img_shape
+        observation = np.random.randn(*img_shape) * 0.0
+        scale_x = int(observation.shape[0] / self.grid_state.shape[0])
+        scale_y = int(observation.shape[1] / self.grid_state.shape[1])
+        for i in range(self.grid_state.shape[0]):
+            for j in range(self.grid_state.shape[1]):
+                for k in range(3):  # 3-channel RGB image
+                    pixel_value = COLOR_MAP[self.grid_state[i, j]][k]
+                    observation[
+                        i * scale_x : (i + 1) * scale_x,
+                        j * scale_y : (j + 1) * scale_y,
+                        k,
+                    ] = pixel_value
+        return (255 * observation).astype(np.uint8)
+
+    def render(self, mode="human", close=False):
+        if close:
+            if self.viewer is not None:
+                self.viewer.close()
+                self.viewer = None
+            return
+
+        img = self.gridarray_to_image()
+        if mode == "rgb_array":
+            return img
+        elif mode == "human":
+            from gym.envs.classic_control import rendering
+
+            if self.viewer is None:
+                self.viewer = rendering.SimpleImageViewer()
+            self.viewer.imshow(img)
+
+    @staticmethod
+    def get_action_meanings():
+        return ["NOOP", "DOWN", "UP", "LEFT", "RIGHT"]
