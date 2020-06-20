@@ -1,4 +1,5 @@
 import copy
+import sys
 
 import gym
 import numpy as np
@@ -64,3 +65,63 @@ class GridworldEnv(gym.Env):
 
         self.viewer = None
 
+    def step(self, action):
+        """ return next observation, reward, done , info"""
+        action = int(action)
+        info = {"success": True}
+        done = False
+        reward = 0.0
+        next_obs = (
+            self.agent_state[0] + self.action_pos_dict[action][0],
+            self.agent_state[1] + self.action_pos_dict[action][1],
+        )
+
+        if action == NOOP:
+            return self.grid_state, reward, False, info
+        next_state_valid = (
+            next_obs[0] < 0 or next_obs[0] >= self.grid_state.shape[0]
+        ) or (next_obs[1] < 0 or next_obs[1] >= self.grid_state.shape[1])
+        if next_state_valid:
+            info["success"] = False
+            return self.grid_state, reward, False, info
+
+        next_state = self.grid_state[next_obs[0], next_obs[1]]
+
+        if next_state == EMPTY:
+            self.grid_state[next_obs[0], next_obs[1]] = AGENT
+        elif next_state == WALL:
+            info["success"] = False
+            reward = -0.1
+            return self.grid_state, reward, False, info
+        elif next_state == TARGET:
+            done = True
+            reward = 1
+        elif next_state == MINE:
+            done = True
+            reward = -1
+
+        # self._render("human")
+        self.grid_state[self.agent_state[0], self.agent_state[1]] = EMPTY
+        self.agent_state = copy.deepcopy(next_obs)
+
+        return self.grid_state, reward, done, info
+
+    def reset(self):
+        self.grid_state = copy.deepcopy(self.initial_grid_state)
+        (self.agent_state, self.agent_target_state,) = self.get_state()
+        return self.grid_state
+
+    def get_state(self):
+        start_state = np.where(self.grid_state == AGENT)
+        goal_state = np.where(self.grid_state == TARGET)
+
+        start_or_goal_not_found = not (start_state[0] and goal_state[0])
+        if start_or_goal_not_found:
+            sys.exit(
+                "Start and/or Goal state not present in the Gridworld. "
+                "Check the Grid layout"
+            )
+        start_state = (start_state[0][0], start_state[1][0])
+        goal_state = (goal_state[0][0], goal_state[1][0])
+
+        return start_state, goal_state
