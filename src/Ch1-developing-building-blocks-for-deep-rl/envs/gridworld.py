@@ -160,6 +160,9 @@ class GridworldEnv(gym.Env):
                 self.viewer = rendering.SimpleImageViewer()
             self.viewer.imshow(img)
 
+    def close(self):
+        self.render(close=True)
+
     @staticmethod
     def get_action_meanings():
         return ["NOOP", "DOWN", "UP", "LEFT", "RIGHT"]
