@@ -61,49 +61,54 @@ class GridworldEnv(gym.Env):
             LEFT: [0, -1],
             RIGHT: [0, 1],
         }
-        (self.agent_start_state, self.agent_goal_state,) = self.get_state()
+        (self.agent_state, self.goal_state) = self.get_state()
+        self.step_num = 0  # To keep track of number of steps
 
         self.viewer = None
 
     def step(self, action):
-        """ return next observation, reward, done , info"""
+        """Return next observation, reward, done , info"""
         action = int(action)
         info = {"success": True}
         done = False
         reward = 0.0
-        next_obs = (
+        if action == NOOP:
+            done = False
+            return self.grid_state, reward, done, info
+
+        next_state = (
             self.agent_state[0] + self.action_pos_dict[action][0],
             self.agent_state[1] + self.action_pos_dict[action][1],
         )
 
-        if action == NOOP:
-            return self.grid_state, reward, False, info
-        next_state_valid = (
-            next_obs[0] < 0 or next_obs[0] >= self.grid_state.shape[0]
-        ) or (next_obs[1] < 0 or next_obs[1] >= self.grid_state.shape[1])
-        if next_state_valid:
+        next_state_invalid = (
+            next_state[0] < 0 or next_state[0] >= self.grid_state.shape[0]
+        ) or (next_state[1] < 0 or next_state[1] >= self.grid_state.shape[1])
+        if next_state_invalid:
             info["success"] = False
-            return self.grid_state, reward, False, info
+            done = False
+            return self.grid_state, reward, done, info
 
-        next_state = self.grid_state[next_obs[0], next_obs[1]]
+        next_agent_state = self.grid_state[next_state[0], next_state[1]]
 
         # Determine rewards
-        if next_state == EMPTY:
-            self.grid_state[next_obs[0], next_obs[1]] = AGENT
-        elif next_state == WALL:
+        if next_agent_state == EMPTY:
+            self.grid_state[next_state[0], next_state[1]] = AGENT
+        elif next_agent_state == WALL:
             info["success"] = False
             reward = -0.1
-            return self.grid_state, reward, False, info
-        elif next_state == GOAL:
+            done = False
+            return self.grid_state, reward, done, info
+        elif next_agent_state == GOAL:
             done = True
             reward = 1
-        elif next_state == MINE:
+        elif next_agent_state == MINE:
             done = True
             reward = -1
 
-        # self._render("human")
+        # Move agent from previous state to the next state on the grid
         self.grid_state[self.agent_state[0], self.agent_state[1]] = EMPTY
-        self.agent_state = copy.deepcopy(next_obs)
+        self.agent_state = copy.deepcopy(next_state)
 
         return self.grid_state, reward, done, info
 
