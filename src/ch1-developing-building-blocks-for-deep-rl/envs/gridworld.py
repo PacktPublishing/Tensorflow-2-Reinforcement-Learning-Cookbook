@@ -8,7 +8,7 @@ import numpy as np
 EMPTY = BLACK = 0
 WALL = GRAY = 1
 AGENT = BLUE = 2
-MINE = RED = 3
+BOMB = RED = 3
 GOAL = GREEN = 4
 SUCCESS = PINK = 5
 
@@ -85,7 +85,7 @@ class GridworldEnv(gym.Env):
             return self.grid_state, reward, done, info
 
         if action == NOOP:
-            done = False
+            self.step_num += 1
             return self.grid_state, reward, done, info
 
         next_state = (
@@ -98,7 +98,6 @@ class GridworldEnv(gym.Env):
         ) or (next_state[1] < 0 or next_state[1] >= self.grid_state.shape[1])
         if next_state_invalid:
             info["status"] = "Next state is invalid"
-            done = False
             return self.grid_state, reward, done, info
 
         next_agent_state = self.grid_state[next_state[0], next_state[1]]
@@ -112,9 +111,11 @@ class GridworldEnv(gym.Env):
             done = False
             return self.grid_state, reward, done, info
         elif next_agent_state == GOAL:
+            info["status"] = "Agent reached the GOAL "
             done = True
             reward = 1
-        elif next_agent_state == MINE:
+        elif next_agent_state == BOMB:
+            info["status"] = "Agent stepped on a BOMB"
             done = True
             reward = -1
 
@@ -186,3 +187,15 @@ class GridworldEnv(gym.Env):
     @staticmethod
     def get_action_meanings():
         return ["NOOP", "DOWN", "UP", "LEFT", "RIGHT"]
+
+
+if __name__ == "__main_":
+    env = GridworldEnv()
+    obs = env.reset()
+    # Sample a random action from the action space
+    action = env.action_space.sample()
+    next_obs, reward, done, info = env.step(action)
+    print(f"reward:{reward} done:{done} info:{info}")
+    env.render()
+    env.close()
+
