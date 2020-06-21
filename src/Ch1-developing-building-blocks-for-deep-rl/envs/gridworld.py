@@ -87,6 +87,7 @@ class GridworldEnv(gym.Env):
 
         next_state = self.grid_state[next_obs[0], next_obs[1]]
 
+        # Determine rewards
         if next_state == EMPTY:
             self.grid_state[next_obs[0], next_obs[1]] = AGENT
         elif next_state == WALL:
