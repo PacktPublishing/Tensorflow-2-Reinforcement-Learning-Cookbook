@@ -10,7 +10,6 @@ WALL = GRAY = 1
 AGENT = BLUE = 2
 BOMB = RED = 3
 GOAL = GREEN = 4
-SUCCESS = PINK = 5
 
 # RGB color value table
 COLOR_MAP = {
@@ -19,7 +18,6 @@ COLOR_MAP = {
     BLUE: [0.0, 0.0, 1.0],
     RED: [1.0, 0.0, 0.0],
     GREEN: [0.0, 1.0, 0.0],
-    PINK: [1.0, 0.0, 1.0],
 }
 
 # Action mapping
@@ -69,24 +67,14 @@ class GridworldEnv(gym.Env):
         (self.agent_state, self.goal_state) = self.get_state()
         self.step_num = 0  # To keep track of number of steps
         self.max_steps = max_steps
-
+        self.done = False
+        self.info = {"status": "Live"}
         self.viewer = None
 
     def step(self, action):
         """Return next observation, reward, done , info"""
         action = int(action)
-        info = {"status": "Live"}
-        done = False
         reward = 0.0
-        # Check if max steps per episode has been reached
-        if self.step_num >= self.max_steps:
-            done = True
-            info["status"] = "Max steps reached"
-            return self.grid_state, reward, done, info
-
-        if action == NOOP:
-            self.step_num += 1
-            return self.grid_state, reward, done, info
 
         next_state = (
             self.agent_state[0] + self.action_pos_dict[action][0],
@@ -97,39 +85,59 @@ class GridworldEnv(gym.Env):
             next_state[0] < 0 or next_state[0] >= self.grid_state.shape[0]
         ) or (next_state[1] < 0 or next_state[1] >= self.grid_state.shape[1])
         if next_state_invalid:
-            info["status"] = "Next state is invalid"
-            return self.grid_state, reward, done, info
+            # Leave the agent state unchanged
+            next_state = self.agent_state
+            self.info["status"] = "Next state is invalid"
 
         next_agent_state = self.grid_state[next_state[0], next_state[1]]
 
         # Calculate reward
         if next_agent_state == EMPTY:
+            # Move agent from previous state to the next state on the grid
+            self.info["status"] = "Agent moved to a new cell"
             self.grid_state[next_state[0], next_state[1]] = AGENT
+            self.grid_state[self.agent_state[0], self.agent_state[1]] = EMPTY
+            self.agent_state = copy.deepcopy(next_state)
+
         elif next_agent_state == WALL:
-            info["status"] = "Agent bumped into a wall"
+            self.info["status"] = "Agent bumped into a wall"
             reward = -0.1
-            done = False
-            return self.grid_state, reward, done, info
+        # Terminal states
         elif next_agent_state == GOAL:
-            info["status"] = "Agent reached the GOAL "
-            done = True
+            self.info["status"] = "Agent reached the GOAL "
+            self.done = True
             reward = 1
         elif next_agent_state == BOMB:
-            info["status"] = "Agent stepped on a BOMB"
-            done = True
+            self.info["status"] = "Agent stepped on a BOMB"
+            self.done = True
             reward = -1
-
-        # Move agent from previous state to the next state on the grid
-        self.grid_state[self.agent_state[0], self.agent_state[1]] = EMPTY
-        self.agent_state = copy.deepcopy(next_state)
+        # elif next_agent_state == AGENT:
+        else:
+            # NOOP or next state is invalid
+            self.done = False
 
         self.step_num += 1
-        return self.grid_state, reward, done, info
+
+        # Check if max steps per episode has been reached
+        if self.step_num >= self.max_steps:
+            self.done = True
+            self.info["status"] = "Max steps reached"
+
+        if self.done:
+            done = True
+            terminal_state = copy.deepcopy(self.grid_state)
+            terminal_info = copy.deepcopy(self.info)
+            _ = self.reset()
+            return (terminal_state, reward, done, terminal_info)
+
+        return self.grid_state, reward, self.done, self.info
 
     def reset(self):
         self.grid_state = copy.deepcopy(self.initial_grid_state)
         (self.agent_state, self.agent_goal_state,) = self.get_state()
         self.step_num = 0
+        self.done = False
+        self.info["status"] = "Live"
         return self.grid_state
 
     def get_state(self):
@@ -189,13 +197,17 @@ class GridworldEnv(gym.Env):
         return ["NOOP", "DOWN", "UP", "LEFT", "RIGHT"]
 
 
-if __name__ == "__main_":
+if __name__ == "__main__":
     env = GridworldEnv()
     obs = env.reset()
-    # Sample a random action from the action space
-    action = env.action_space.sample()
-    next_obs, reward, done, info = env.step(action)
-    print(f"reward:{reward} done:{done} info:{info}")
-    env.render()
+    done = False
+    step_num = 1
+    while not done:
+        # Sample a random action from the action space
+        action = env.action_space.sample()
+        next_obs, reward, done, info = env.step(action)
+        print(f"step#:{step_num} reward:{reward} done:{done} info:{info}")
+        step_num += 1
+        env.render()
     env.close()
 
