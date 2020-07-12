@@ -202,6 +202,7 @@ if __name__ == "__main__":
     obs = env.reset()
     done = False
     step_num = 1
+    # Run one episode
     while not done:
         # Sample a random action from the action space
         action = env.action_space.sample()
@@ -210,4 +211,3 @@ if __name__ == "__main__":
         step_num += 1
         env.render()
     env.close()
-
