@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import seaborn as sns
 
 
 def visualize_maze_values(q_table, env, isMaze=True, arrow=True):
@@ -67,3 +68,17 @@ def visualize_maze_values(q_table, env, isMaze=True, arrow=True):
         state_value_func[env.goal_pos] = max(v[:-1]) + 0.1
         plt.imshow(state_value_func, cmap="hot")
     plt.show()
+
+
+def visualize_grid_state_values(grid_state_values):
+    """Visualizes the state value function for the grid"""
+    plt.figure(figsize=(10, 5))
+    p = sns.heatmap(
+        grid_state_values,
+        cmap="coolwarm",
+        annot=True,
+        fmt=".1f",
+        annot_kws={"size": 16},
+        square=True,
+    )
+    p.set_ylim(len(grid_state_values) + 0.01, -0.01)
