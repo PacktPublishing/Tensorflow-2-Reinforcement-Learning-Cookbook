@@ -27,8 +27,8 @@ class GridworldV2Env(gym.Env):
         self.goal_coordinate = [0, 3]
         self.bomb_coordinate = [1, 3]
         self.wall_coordinate = [1, 1]
-        self.goal_state = self.coordinate_to_index_map[self.goal_coordinate]  # 3
-        self.bomb_state = self.coordinate_to_index_map[self.bomb_coordinate]  # 7
+        self.goal_state = self.coordinate_to_index_map[str(self.goal_coordinate)]  # 3
+        self.bomb_state = self.coordinate_to_index_map[str(self.bomb_coordinate)]  # 7
         self.map[self.goal_coordinate[0]][self.goal_coordinate[1]] = 1
         self.map[self.bomb_coordinate[0]][self.bomb_coordinate[1]] = -1
         self.map[self.wall_coordinate[0]][self.wall_coordinate[1]] = 2
