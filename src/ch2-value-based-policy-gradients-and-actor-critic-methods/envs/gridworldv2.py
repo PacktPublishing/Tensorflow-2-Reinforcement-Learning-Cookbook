@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-class Gridworldv2Env(gym.Env):
+class GridworldV2Env(gym.Env):
     def __init__(self, step_cost=-0.2, max_ep_length=500, explore_start=False):
         self.map = np.zeros((3, 4))
         self.observation_space = gym.spaces.Discrete(1)
