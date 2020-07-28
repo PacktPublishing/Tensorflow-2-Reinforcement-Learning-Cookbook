@@ -5,11 +5,6 @@ import numpy as np
 
 class GridworldV2Env(gym.Env):
     def __init__(self, step_cost=-0.2, max_ep_length=500, explore_start=False):
-        self.map = np.zeros((3, 4))
-        self.observation_space = gym.spaces.Discrete(1)
-        self.map[0][3] = 1  # goal state
-        self.map[1][3] = -1  # Terminal state
-        self.map[1][1] = 2  # Wall
         self.index_to_coordinate_map = {
             "0": [0, 0],
             "1": [0, 1],
@@ -27,9 +22,18 @@ class GridworldV2Env(gym.Env):
         self.coordinate_to_index_map = {
             str(val): int(key) for key, val in self.index_to_coordinate_map.items()
         }
+        self.map = np.zeros((3, 4))
+        self.observation_space = gym.spaces.Discrete(1)
+        self.goal_coordinate = [0, 3]
+        self.bomb_coordinate = [1, 3]
+        self.wall_coordinate = [1, 1]
+        self.goal_state = self.coordinate_to_index_map[self.goal_coordinate]  # 3
+        self.bomb_state = self.coordinate_to_index_map[self.bomb_coordinate]  # 7
+        self.map[self.goal_coordinate[0]][self.goal_coordinate[1]] = 1
+        self.map[self.bomb_coordinate[0]][self.bomb_coordinate[1]] = -1
+        self.map[self.wall_coordinate[0]][self.wall_coordinate[1]] = 2
+
         self.exploring_starts = explore_start
-        self.goal_state = 3
-        self.death_state = 7
         self.state = 8
         self.done = False
         self.max_ep_length = max_ep_length
@@ -43,9 +47,10 @@ class GridworldV2Env(gym.Env):
         self.done = False
         self.steps = 0
         self.map = np.zeros((3, 4))
-        self.map[0][3] = 1  # goal state
-        self.map[1][3] = -1  # death state
-        self.map[1][1] = 2  # block
+        self.map[self.goal_coordinate[0]][self.goal_coordinate[1]] = 1
+        self.map[self.bomb_coordinate[0]][self.bomb_coordinate[1]] = -1
+        self.map[self.wall_coordinate[0]][self.wall_coordinate[1]] = 2
+
         if self.exploring_starts:
             self.state = np.random.choice([0, 1, 2, 4, 6, 8, 9, 10, 11])
         else:
@@ -84,7 +89,7 @@ class GridworldV2Env(gym.Env):
             reward = 1
             self.done = True
 
-        elif next_state == self.death_state:
+        elif next_state == self.bomb_state:
             reward = -1
             self.done = True
         else:
