@@ -1,7 +1,7 @@
 import numpy as np
 
 from envs.maze import MazeEnv
-from value_function_plot import value_function_plot
+from value_function_utils import visualize_maze_values
 
 discount = 0.9
 iters = 1000
@@ -57,10 +57,10 @@ for state in range(state_dim):
 for state in range(state_dim):
     policy[state] = np.argmax(q_values[state, :])
 
-np.save("q_values", q_values)
-np.save("optimal_policy", policy)
+np.save("results/q_values", q_values)
+np.save("results/optimal_policy", policy)
 # print(q_values)
 print("Action mapping:[0 - UP; 1 - DOWN; 2 - LEFT; 3 - RIGHT")
 print("Optimal actions:")
 print(policy)
-value_function_plot(q_values, env)
+visualize_maze_values(q_values, env)

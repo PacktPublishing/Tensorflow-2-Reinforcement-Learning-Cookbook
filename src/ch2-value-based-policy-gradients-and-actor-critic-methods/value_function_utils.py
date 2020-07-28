@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def value_function_plot(q_table, env, isMaze=True, arrow=True):
+def visualize_maze_values(q_table, env, isMaze=True, arrow=True):
     """Plot the Tabular Q-Value function
 
     Args:
