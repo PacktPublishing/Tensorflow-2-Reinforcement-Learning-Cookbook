@@ -75,13 +75,14 @@ def visualize_grid_state_values(grid_state_values):
     plt.figure(figsize=(10, 5))
     p = sns.heatmap(
         grid_state_values,
-        cmap="coolwarm",
+        cmap="Greens",
         annot=True,
         fmt=".1f",
         annot_kws={"size": 16},
         square=True,
     )
     p.set_ylim(len(grid_state_values) + 0.01, -0.01)
+    plt.show()
 
 
 def visualize_grid_action_values(grid_action_values):
