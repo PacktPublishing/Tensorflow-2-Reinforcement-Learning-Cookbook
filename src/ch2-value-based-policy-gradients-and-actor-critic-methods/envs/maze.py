@@ -34,7 +34,7 @@ class MazeEnv(gym.Env):
         self.slip_probability = 0.1
         self.start_pos = (0, 0)
         self.goal_pos = (0, 4)
-        self.idx2cell = {
+        self.index_to_coordinate_map = {
             0: (0, 0),
             1: (1, 0),
             2: (3, 0),
@@ -50,9 +50,11 @@ class MazeEnv(gym.Env):
             12: (0, 4),
             13: (1, 4),
         }
-        self.cell2idx = dict((val, key) for key, val in self.idx2cell.items())
+        self.coordinate_to_index_map = dict(
+            (val, key) for key, val in self.index_to_coordinate_map.items()
+        )
         # Start state
-        self.state = self.cell2idx[self.start_pos]
+        self.state = self.coordinate_to_index_map[self.start_pos]
 
     def set_state(self, state: int) -> None:
         """Set the current state of the environment. Useful for value iteration
@@ -81,7 +83,7 @@ class MazeEnv(gym.Env):
             if np.random.rand() < self.slip_probability:
                 action = self.slip_action_map[action]
 
-        cell = self.idx2cell[int(self.state / 8)]
+        cell = self.index_to_coordinate_map[int(self.state / 8)]
         if action == 0:
             c_next = cell[1]
             r_next = max(0, cell[0] - 1)
@@ -101,7 +103,9 @@ class MazeEnv(gym.Env):
             c_next == self.goal_pos[1]
         ):  # Check if goal reached
             v_coin = self.num2coin(self.state % 8)
-            self.state = 8 * self.cell2idx[(r_next, c_next)] + self.state % 8
+            self.state = (
+                8 * self.coordinate_to_index_map[(r_next, c_next)] + self.state % 8
+            )
             return (
                 self.state,
                 float(sum(v_coin)),
@@ -118,7 +122,9 @@ class MazeEnv(gym.Env):
                     v_coin[1] = 1
                 elif (r_next, c_next) == (3, 3):
                     v_coin[2] = 1
-                self.state = 8 * self.cell2idx[(r_next, c_next)] + self.coin2num(v_coin)
+                self.state = 8 * self.coordinate_to_index_map[
+                    (r_next, c_next)
+                ] + self.coin2num(v_coin)
                 return (
                     self.state,
                     0.0,
@@ -147,11 +153,11 @@ class MazeEnv(gym.Env):
 
     def reset(self):
         # Return the initial state
-        self.state = self.cell2idx[self.start_pos]
+        self.state = self.coordinate_to_index_map[self.start_pos]
         return self.state
 
     def render(self):
-        cell = self.idx2cell[int(self.state / 8)]
+        cell = self.index_to_coordinate_map[int(self.state / 8)]
         desc = self.map.tolist()
 
         desc[cell[0]] = (
