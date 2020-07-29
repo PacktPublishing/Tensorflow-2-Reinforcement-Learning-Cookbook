@@ -25,7 +25,7 @@ def temporal_difference_learning(env, max_episodes):
 
 if __name__ == "__main__":
     # init the environment:
-    max_episodes = 5000
+    max_episodes = 4000
     env = Gridworldv2(step_cost=-0.1, max_ep_length=30)
     temporal_difference_learning(env, max_episodes)
 

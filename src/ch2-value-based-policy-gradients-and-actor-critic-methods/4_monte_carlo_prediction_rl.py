@@ -90,7 +90,7 @@ def monte_carlo_control(env, max_episodes):
 
 
 if __name__ == "__main__":
-    max_episodes = 3000
+    max_episodes = 4000
     env = GridworldV2Env(step_cost=-0.1, max_ep_length=30)
     print(f"===Monte Carlo Prediction===")
     monte_carlo_prediction(env, max_episodes)
