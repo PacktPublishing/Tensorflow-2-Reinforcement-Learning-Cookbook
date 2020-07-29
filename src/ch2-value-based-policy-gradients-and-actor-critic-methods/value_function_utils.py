@@ -156,11 +156,12 @@ def visualize_grid_action_values(grid_action_values):
         bottom,
         ax=ax,
         triplotkw={"color": "k", "lw": 1},
-        tripcolorkw={"cmap": "coolwarm"},
+        tripcolorkw={"cmap": "rainbow_r"},
     )
 
     ax.margins(0)
     ax.set_aspect("equal")
+    ax.set_axis_off()
     fig.colorbar(tripcolor)
 
     for i, (xi, yi) in enumerate(top_value_positions):

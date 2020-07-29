@@ -24,6 +24,7 @@ class GridworldV2Env(gym.Env):
         }
         self.map = np.zeros((3, 4))
         self.observation_space = gym.spaces.Discrete(1)
+        self.distinct_states = [str(i) for i in range(12)]
         self.goal_coordinate = [0, 3]
         self.bomb_coordinate = [1, 3]
         self.wall_coordinate = [1, 1]
