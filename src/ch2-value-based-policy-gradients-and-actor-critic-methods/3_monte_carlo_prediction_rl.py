@@ -51,3 +51,48 @@ def epsilon_greedy_policy(action_logits, epsilon=0.2):
     return np.array(probs) - residual
 
 
+def monte_carlo_control(env, max_episodes):
+    grid_state_action_values = np.zeros((12, 4))
+    grid_state_action_values[3] = 1
+    grid_state_action_values[7] = -1
+
+    possible_states = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"]
+    possible_actions = ["0", "1", "2", "3"]
+    Returns = {}
+    for state in possible_states:
+        for action in possible_actions:
+            Returns[state + ", " + action] = []
+
+    gamma = 0.99
+    for episode in range(max_episodes):
+        g_t = 0
+        state = env.reset()
+        trajectory = []
+        while True:
+            action_values = grid_state_action_values[state]
+            probs = epsilon_greedy_policy(action_values)
+            action = np.random.choice(np.arange(4), p=probs)  # random policy
+
+            next_state, reward, done = env.step(action)
+            trajectory.append((state, action, reward))
+
+            state = next_state
+            if done:
+                break
+
+        for step in reversed(trajectory):
+            g_t = gamma * g_t + step[2]
+            Returns[str(step[0]) + ", " + str(step[1])].append(g_t)
+            grid_state_action_values[step[0]][step[1]] = np.mean(
+                Returns[str(step[0]) + ", " + str(step[1])]
+            )
+    visualize_grid_action_values(grid_state_action_values)
+
+
+if __name__ == "__main__":
+    max_episodes = 3000
+    env = GridworldV2Env(step_cost=-0.1, max_ep_length=30)
+    print(f"===Monte Carlo Prediction===")
+    monte_carlo_prediction(env, max_episodes)
+    print(f"===Monte Carlo Control===")
+    monte_carlo_control(env, max_episodes)
