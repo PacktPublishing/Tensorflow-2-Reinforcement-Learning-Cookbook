@@ -9,10 +9,10 @@ from value_function_utils import (
 
 def monte_carlo_prediction(env, max_episodes):
     returns = {state: [] for state in env.distinct_states}
-    grid_state_values = np.zeros(12)
+    grid_state_values = np.zeros(len(env.distinct_states))
     grid_state_values[env.goal_state] = 1
     grid_state_values[env.bomb_state] = -1
-    gamma = 0.99
+    gamma = 0.99  # Discount factor
     for episode in range(max_episodes):
         g_t = 0
         state = env.reset()
