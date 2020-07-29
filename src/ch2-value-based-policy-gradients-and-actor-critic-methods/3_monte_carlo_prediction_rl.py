@@ -32,3 +32,22 @@ def monte_carlo_prediction(env, max_episodes):
                 grid_state_values[state] = np.mean(returns[str(state)])
     visualize_grid_state_values(grid_state_values.reshape((3, 4)))
 
+
+def epsilon_greedy_policy(action_logits, epsilon=0.2):
+    idx = np.argmax(action_logits)
+    probs = []
+    epsilon_decay_factor = np.sqrt(sum([a ** 2 for a in action_logits]))
+
+    if epsilon_decay_factor == 0:
+        epsilon_decay_factor = 1.0
+    for i, a in enumerate(action_logits):
+        if i == idx:
+            probs.append(round(1 - epsilon + (epsilon / epsilon_decay_factor), 3))
+        else:
+            probs.append(round(epsilon / epsilon_decay_factor, 3))
+    residual_err = sum(probs) - 1
+    residual = residual_err / len(action_logits)
+
+    return np.array(probs) - residual
+
+
