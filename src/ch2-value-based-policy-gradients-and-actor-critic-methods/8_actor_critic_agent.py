@@ -33,7 +33,7 @@ class Agent:
         self.opt = tf.keras.optimizers.Adam(learning_rate=1e-4)
         self.actor_critic = ActorCritic(action_dim)
 
-    def act(self, state):
+    def get_action(self, state):
         _, action_probabilities = self.actor_critic(np.array([state]))
         action_probabilities = tf.nn.softmax(action_probabilities)
         action_probabilities = action_probabilities.numpy()
