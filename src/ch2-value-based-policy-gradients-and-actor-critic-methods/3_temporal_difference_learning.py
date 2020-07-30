@@ -11,12 +11,12 @@ def temporal_difference_learning(env, max_episodes):
     v = grid_state_values
     gamma = 0.99  # Discount factor
     alpha = 0.01  # learning rate
-    done = False
 
     for episode in range(max_episodes):
         state = env.reset()
+        done = False
         while not done:
-            action = np.random.randint(4)  # random policy
+            action = env.action_space.sample()  # random policy
             next_state, reward, done = env.step(action)
 
             # State-value function updates using TD(0)
