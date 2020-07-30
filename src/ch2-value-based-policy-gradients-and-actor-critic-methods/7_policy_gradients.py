@@ -27,8 +27,13 @@ class PolicyNet(keras.Model):
 
 class Agent(object):
     def __init__(self, action_dim=1):
+        """Agent with a neural-network brain powered policy
+
+        Args:
+            action_dim (int): Action dimension
+        """
         self.policy_net = PolicyNet(action_dim=action_dim)
-        self.optimizer = tf.keras.optimizers.Adam(learning_rate=1e-5)
+        self.optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)
         self.gamma = 0.99
 
     def policy(self, observation):
@@ -69,13 +74,14 @@ class Agent(object):
         return loss
 
 
-def train(agent: Agent, env: gym.Env, episodes: int):
+def train(agent: Agent, env: gym.Env, episodes: int, render=True):
     """Train `agent` in `env` for `episodes`
 
     Args:
         agent (Agent): Agent to train
         env (gym.Env): Environment to train the agent
         episodes (int): Number of episodes to train
+        render (bool): True=Enable/False=Disable rendering; Default=True
     """
 
     for episode in range(episodes):
@@ -86,24 +92,24 @@ def train(agent: Agent, env: gym.Env, episodes: int):
         states = []
         actions = []
         while not done:
-            # env.render()
             action = agent.get_action(state)
-            # print(action)
             next_state, reward, done, _ = env.step(action)
             rewards.append(reward)
             states.append(state)
             actions.append(action)
             state = next_state
             total_reward += reward
-            env.render()
+            if render:
+                env.render()
             if done:
                 agent.learn(states, rewards, actions)
+                print("\n")
             print(f"Episode#:{episode} ep_reward:{total_reward}", end="\r")
 
 
 if __name__ == "__main__":
     agent = Agent()
     episodes = 500
-    env = gym.make("CartPole-v0")
+    env = gym.make("MountainCar-v0")
     train(agent, env, episodes)
     env.close()
