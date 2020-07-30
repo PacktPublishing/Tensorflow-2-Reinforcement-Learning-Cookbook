@@ -58,10 +58,10 @@ def monte_carlo_control(env, max_episodes):
 
     possible_states = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"]
     possible_actions = ["0", "1", "2", "3"]
-    Returns = {}
+    returns = {}
     for state in possible_states:
         for action in possible_actions:
-            Returns[state + ", " + action] = []
+            returns[state + ", " + action] = []
 
     gamma = 0.99
     for episode in range(max_episodes):
@@ -82,9 +82,9 @@ def monte_carlo_control(env, max_episodes):
 
         for step in reversed(trajectory):
             g_t = gamma * g_t + step[2]
-            Returns[str(step[0]) + ", " + str(step[1])].append(g_t)
+            returns[str(step[0]) + ", " + str(step[1])].append(g_t)
             grid_state_action_values[step[0]][step[1]] = np.mean(
-                Returns[str(step[0]) + ", " + str(step[1])]
+                returns[str(step[0]) + ", " + str(step[1])]
             )
     visualize_grid_action_values(grid_state_action_values)
 
