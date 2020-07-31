@@ -84,7 +84,7 @@ def train(agent, env, episodes, render=True):
         all_loss = []
 
         while not done:
-            action = agent.act(state)
+            action = agent.get_action(state)
             next_state, reward, done, _ = env.step(action)
             loss = agent.learn(state, action, reward, next_state, done)
             all_loss.append(loss)
