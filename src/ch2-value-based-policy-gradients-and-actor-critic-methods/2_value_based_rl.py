@@ -41,7 +41,7 @@ def calculate_values(state, action):
 for i in range(iters):
     v_s = np.zeros(state_dim)
     for state in range(state_dim):
-        if env.idx2cell[int(state / 8)] == env.goal_pos:
+        if env.index_to_coordinate_map[int(state / 8)] == env.goal_pos:
             continue
         v_max = float("-inf")
         for action in range(env.action_space.n):

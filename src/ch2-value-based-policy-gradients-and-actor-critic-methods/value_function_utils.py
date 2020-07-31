@@ -22,7 +22,7 @@ def visualize_maze_values(q_table, env, isMaze=True, arrow=True):
     v = np.max(q_table, axis=1)
     best_action = np.argmax(q_table, axis=1)
     if isMaze:
-        idx2cell = env.idx2cell
+        idx2cell = env.index_to_coordinate_map
         for i in range(8):
             _, ax = plt.subplots()
             ax.set_axis_off()
