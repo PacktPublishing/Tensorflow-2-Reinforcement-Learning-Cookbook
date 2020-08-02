@@ -162,7 +162,10 @@ class MazeEnv(gym.Env):
 
         desc[cell[0]] = (
             desc[cell[0]][: cell[1]]
-            + "\x1b[1;34m"
+            + "\x1b[1;34m"  # Blue font
+            + "\x1b[4m"  # Underline
+            + "\x1b[1m"  # Bold
+            + "\x1b[7m"  # Reversed
             + desc[cell[0]][cell[1]]
             + "\x1b[0m"
             + desc[cell[0]][cell[1] + 1 :]
