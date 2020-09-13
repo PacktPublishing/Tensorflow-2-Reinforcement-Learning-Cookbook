@@ -123,8 +123,6 @@ class StockTradingContinuousEnv(gym.Env):
         img_observation = cv2.resize(
             img_observation, dsize=(128, 128), interpolation=cv2.INTER_CUBIC
         )
-        cv2.imshow("im", img_observation)
-        cv2.waitKey(10)
 
         return img_observation
 
