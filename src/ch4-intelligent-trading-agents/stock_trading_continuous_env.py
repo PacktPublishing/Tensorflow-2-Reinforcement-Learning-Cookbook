@@ -1,14 +1,13 @@
-import random
 import os
+import random
+from typing import Dict
 
 import gym
 import numpy as np
 import pandas as pd
 from gym import spaces
-from typing import Dict
 
 from trading_utils import TradeVisualizer
-
 
 env_config = {
     "ticker": "MSFT",
@@ -77,7 +76,7 @@ class StockTradingContinuousEnv(gym.Env):
             self.ohlcv_df.loc[:, "Open"].values
         )
 
-        obs = self.fetch_stock_market_data()
+        obs = self.get_observation()
 
         return obs, reward, done, {}
 
@@ -89,14 +88,15 @@ class StockTradingContinuousEnv(gym.Env):
         self.cost_basis = 0
         self.current_step = 0
         self.trades = []
+        if self.visualization is None:
+            self.visualization = TradeVisualizer(
+                self.ticker, "TF2RL-Cookbook Ch4-StockTradingEnv"
+            )
 
-        return self.fetch_stock_market_data()
+        return self.get_observation()
 
     def render(self, **kwargs):
         # Render the environment to the screen
-
-        if self.visualization is None:
-            self.visualization = TradeVisualizer(self.ticker, kwargs.get("title", None))
 
         if self.current_step > self.horizon:
             self.visualization.render(
@@ -111,18 +111,19 @@ class StockTradingContinuousEnv(gym.Env):
             self.visualization.close()
             self.visualization = None
 
-    def fetch_stock_market_data(self):
-        # Get stock price data from input (file/live) stream
-        observation = (
-            self.ohlcv_df.loc[
-                self.current_step : self.current_step + self.horizon,
-                self.observation_features,
-            ]
-            .to_numpy()
-            .T
-        )
+    def get_observation(self):
+        """Return a view of the Ticker price chart as image observation
 
-        return observation
+        Returns:
+            img_observation (np.ndarray): Image of ticker candle stick plot
+            with volume bars as observation
+        """
+        img_observation = self.visualization.render_image_observation(
+            self.current_step, self.horizon
+        )
+        # print(f"img_obs.shape:{img_observation.shape}")
+
+        return img_observation
 
     def execute_trade_action(self, action):
 
