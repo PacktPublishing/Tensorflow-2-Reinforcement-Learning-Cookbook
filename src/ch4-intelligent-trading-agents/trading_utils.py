@@ -14,17 +14,14 @@ style.use("seaborn-whitegrid")
 class TradeVisualizer(object):
     """Visualizer for stock trades"""
 
-    def __init__(self, ticker, title=None):
+    def __init__(self, ticker, ticker_data_stream, title=None, skiprows=0):
         self.ticker = ticker
-        data_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data")
-        ticker_file_stream = os.path.join(f"{data_dir}", f"{self.ticker}.csv")
-        assert os.path.isfile(
-            ticker_file_stream
-        ), f"Historical stock data file stream not found at: data/{self.ticker}.csv"
-        # Stock market data stream. An offline file stream is used. Alternatively, a web
+        # Stock/crypto market/exchange data stream. An offline file stream is used.
+        # Alternatively, a web
         # API can be used to pull live data.
-        # Data-Frame: Date Open High Low Close Adj-Close Volume
-        self.ohlcv_df = pd.read_csv(ticker_file_stream, parse_dates=True, index_col=0)
+        self.ohlcv_df = pd.read_csv(
+            ticker_data_stream, parse_dates=True, index_col="Date", skiprows=skiprows
+        ).sort_values(by="Date")
         self.account_balances = np.zeros(len(self.ohlcv_df.index))
 
         fig = plt.figure()
@@ -61,7 +58,7 @@ class TradeVisualizer(object):
             date_range,
             self.account_balances[horizon],
             "-",
-            label="Account Balance",
+            label="Account Balance ($)",
             lw=1.0,
         )
 
@@ -69,7 +66,9 @@ class TradeVisualizer(object):
         legend = self.account_balance_ax.legend(loc=2, ncol=2)
         legend.get_frame().set_alpha(0.4)
 
-        last_date = self.ohlcv_df.index[current_step].strftime("%Y-%m-%d")
+        last_date = self.ohlcv_df.index[current_step + len(horizon)].strftime(
+            "%Y-%m-%d"
+        )
         last_date = matplotlib.dates.datestr2num(last_date)
         last_account_balance = self.account_balances[current_step]
 
@@ -139,6 +138,7 @@ class TradeVisualizer(object):
             colorup="g",
             colordown="r",
         )
+        self.price_ax.set_ylabel("Price ($)")
 
         last_date = self.ohlcv_df.index[current_step].strftime("%Y-%m-%d")
         last_date = matplotlib.dates.datestr2num(last_date)
