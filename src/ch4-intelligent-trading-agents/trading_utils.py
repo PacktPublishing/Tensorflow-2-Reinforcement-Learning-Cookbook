@@ -58,7 +58,7 @@ class TradeVisualizer(object):
             self.account_balances[horizon],
             "-",
             label="Account Balance",
-            lw=6.0,
+            lw=1.0,
         )
 
         self.account_balance_ax.legend()
@@ -95,7 +95,6 @@ class TradeVisualizer(object):
                 mav=2,
                 block=False,
                 returnfig=True,
-                title="TF2RL-Cookbook StockTrading RL Env",
                 style="charles",
                 tight_layout=True,
             )

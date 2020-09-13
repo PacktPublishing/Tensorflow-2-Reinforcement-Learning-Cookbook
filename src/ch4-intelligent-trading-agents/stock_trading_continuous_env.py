@@ -2,6 +2,7 @@ import os
 import random
 from typing import Dict
 
+import cv2
 import gym
 import numpy as np
 import pandas as pd
@@ -23,7 +24,7 @@ class StockTradingContinuousEnv(gym.Env):
     visualization = None
 
     def __init__(self, env_config: Dict = env_config):
-        """Stock trading environment for RL agents
+        """Stock trading environment for RL agents with continuous action space 
 
         Args:
             ticker (str, optional): Ticker symbol for the stock. Defaults to "MSFT".
@@ -57,12 +58,10 @@ class StockTradingContinuousEnv(gym.Env):
             "Adj Close",
             "Volume",
         ]
+        self.obs_width, self.obs_height = 128, 128
         self.horizon = env_config.get("observation_horizon_sequence_length")
         self.observation_space = spaces.Box(
-            low=0,
-            high=1,
-            shape=(len(self.observation_features), self.horizon + 2),
-            dtype=np.float,
+            low=0, high=255, shape=(128, 128, 3), dtype=np.uint8,
         )
 
     def step(self, action):
@@ -121,7 +120,11 @@ class StockTradingContinuousEnv(gym.Env):
         img_observation = self.visualization.render_image_observation(
             self.current_step, self.horizon
         )
-        # print(f"img_obs.shape:{img_observation.shape}")
+        img_observation = cv2.resize(
+            img_observation, dsize=(128, 128), interpolation=cv2.INTER_CUBIC
+        )
+        cv2.imshow("im", img_observation)
+        cv2.waitKey(10)
 
         return img_observation
 
