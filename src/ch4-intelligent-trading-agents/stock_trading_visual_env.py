@@ -31,14 +31,14 @@ class StockTradingVisualEnv(gym.Env):
         super(StockTradingVisualEnv, self).__init__()
         self.ticker = env_config.get("ticker", "MSFT")
         data_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data")
-        ticker_file_stream = os.path.join(f"{data_dir}", f"{self.ticker}.csv")
+        self.ticker_file_stream = os.path.join(f"{data_dir}", f"{self.ticker}.csv")
         assert os.path.isfile(
-            ticker_file_stream
+            self.ticker_file_stream
         ), f"Historical stock data file stream not found at: data/{self.ticker}.csv"
         # Stock market data stream. An offline file stream is used. Alternatively, a web
         # API can be used to pull live data.
         # Data-Frame: Date Open High Low Close Adj-Close Volume
-        self.ohlcv_df = pd.read_csv(ticker_file_stream)
+        self.ohlcv_df = pd.read_csv(self.ticker_file_stream)
 
         self.opening_account_balance = env_config["opening_account_balance"]
         # Action: 0-> Hold; 1-> Buy; 2 ->Sell;
@@ -85,7 +85,9 @@ class StockTradingVisualEnv(gym.Env):
         self.trades = []
         if self.viz is None:
             self.viz = TradeVisualizer(
-                self.ticker, "TF2RL-Cookbook Ch4-StockTradingEnv"
+                self.ticker,
+                self.ticker_file_stream,
+                "TF2RL-Cookbook Ch4-StockTradingVisualEnv",
             )
 
         return self.get_observation()
