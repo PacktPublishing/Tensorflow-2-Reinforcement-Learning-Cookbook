@@ -24,7 +24,7 @@ class TradeVisualizer(object):
         ).sort_values(by="Date")
         self.account_balances = np.zeros(len(self.ohlcv_df.index))
 
-        fig = plt.figure()
+        fig = plt.figure("TF2RL-Cookbook", figsize=[12, 6])
         fig.suptitle(title)
         nrows, ncols = 6, 1
         gs = fig.add_gridspec(nrows, ncols)
@@ -85,6 +85,8 @@ class TradeVisualizer(object):
             max(self.account_balances) * 1.25,
         )
 
+        plt.setp(self.account_balance_ax.get_xticklabels(), visible=False)
+
     def render_image_observation(self, current_step, horizon):
         window_start = max(current_step - horizon, 0)
         step_range = range(window_start, current_step + 1)
@@ -115,9 +117,16 @@ class TradeVisualizer(object):
                 block=False,
                 tight_layout=True,
             )
+        self.fig.canvas.set_window_title("TF2RL-Cookbook")
         self.fig.canvas.draw()
         fig_data = np.frombuffer(self.fig.canvas.tostring_rgb(), dtype=np.uint8)
         fig_data = fig_data.reshape(self.fig.canvas.get_width_height()[::-1] + (3,))
+
+        self.fig.set_size_inches(12, 6, forward=True)
+        self.axes[0].set_ylabel("Price ($)")
+        self.axes[0].yaxis.set_label_position("left")
+        self.axes[2].yaxis.set_label_position("left")  # Volume
+
         return fig_data
 
     def _render_ohlc(self, current_step, dates, horizon):
@@ -139,6 +148,7 @@ class TradeVisualizer(object):
             colordown="r",
         )
         self.price_ax.set_ylabel("Price ($)")
+        self.price_ax.tick_params(axis="y", pad=30)
 
         last_date = self.ohlcv_df.index[current_step].strftime("%Y-%m-%d")
         last_date = matplotlib.dates.datestr2num(last_date)
@@ -206,8 +216,6 @@ class TradeVisualizer(object):
         """
 
         plt.grid()
-        plt.setp(self.account_balance_ax.get_xticklabels(), visible=False)
-
         plt.pause(0.001)
 
     def close(self):
