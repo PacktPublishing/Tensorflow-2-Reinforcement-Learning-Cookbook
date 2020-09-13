@@ -42,7 +42,11 @@ class TradeVisualizer(object):
         rowspan, colspan = 8, 1
 
         self.price_ax = plt.subplot2grid(
-            (6, 1), (2, 0), rowspan=8, colspan=1, sharex=self.account_balance_ax
+            (nrows, ncols),
+            (row, col),
+            rowspan=rowspan,
+            colspan=colspan,
+            sharex=self.account_balance_ax,
         )
         self.price_ax = fig.add_subplot(gs[row : row + rowspan, col : col + colspan])
 
@@ -149,8 +153,7 @@ class TradeVisualizer(object):
             color="black",
         )
 
-        ylim = self.price_ax.get_ylim()
-        self.price_ax.set_ylim(ylim[0] - (ylim[1] - ylim[0]), ylim[1])
+        plt.setp(self.price_ax.get_xticklabels(), visible=False)
 
     def _render_trades(self, trades, horizon):
         for trade in trades:
