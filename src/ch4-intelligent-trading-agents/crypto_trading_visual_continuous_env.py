@@ -104,7 +104,7 @@ class CryptoTradingVisualContinuousEnv(gym.Env):
             self.viz = TradeVisualizer(
                 self.ticker,
                 self.ticker_file_stream,
-                "TF2RL-Cookbook Ch4-CryptoTradingVisualContinuousEnv",
+                "TFRL-Cookbook Ch4-CryptoTradingVisualContinuousEnv",
                 skiprows=1,
             )
 

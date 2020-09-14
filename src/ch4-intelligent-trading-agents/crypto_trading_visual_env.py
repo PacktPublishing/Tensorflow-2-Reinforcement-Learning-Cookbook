@@ -103,7 +103,7 @@ class CryptoTradingVisualEnv(gym.Env):
             self.viz = TradeVisualizer(
                 self.ticker,
                 self.ticker_file_stream,
-                "TF2RL-Cookbook Ch4-CryptoTradingVisualEnv",
+                "TFRL-Cookbook Ch4-CryptoTradingVisualEnv",
                 skiprows=1,
             )
 

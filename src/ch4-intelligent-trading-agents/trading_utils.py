@@ -31,7 +31,7 @@ class TradeVisualizer(object):
             ]
         self.account_balances = np.zeros(len(self.ohlcv_df.index))
 
-        fig = plt.figure("TF2RL-Cookbook", figsize=[12, 6])
+        fig = plt.figure("TFRL-Cookbook", figsize=[12, 6])
         fig.suptitle(title)
         nrows, ncols = 6, 1
         gs = fig.add_gridspec(nrows, ncols)
@@ -125,7 +125,7 @@ class TradeVisualizer(object):
                 block=False,
                 tight_layout=True,
             )
-        self.fig.canvas.set_window_title("TF2RL-Cookbook")
+        self.fig.canvas.set_window_title("TFRL-Cookbook")
         self.fig.canvas.draw()
         fig_data = np.frombuffer(self.fig.canvas.tostring_rgb(), dtype=np.uint8)
         fig_data = fig_data.reshape(self.fig.canvas.get_width_height()[::-1] + (3,))

@@ -104,7 +104,7 @@ class CryptoTradingEnv(gym.Env):
             self.viz = TradeVisualizer(
                 self.ticker,
                 self.ticker_file_stream,
-                "TF2RL-Cookbook Ch4-CryptoTradingEnv",
+                "TFRL-Cookbook Ch4-CryptoTradingEnv",
                 skiprows=1,  # Skip the first line with the data download source URL
             )
 
