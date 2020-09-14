@@ -22,6 +22,13 @@ class TradeVisualizer(object):
         self.ohlcv_df = pd.read_csv(
             ticker_data_stream, parse_dates=True, index_col="Date", skiprows=skiprows
         ).sort_values(by="Date")
+        if "USD" in self.ticker:  # True for crypto-fiat currency pairs
+            # Use volume of the crypto currency for volume plot.
+            # A column with header="Volume" is required for default mpf plot.
+            # Remove "USD" from self.ticker string and clone the crypto volume column
+            self.ohlcv_df["Volume"] = self.ohlcv_df[
+                "Volume " + self.ticker[:-3]  # e.g: "Volume BTC"
+            ]
         self.account_balances = np.zeros(len(self.ohlcv_df.index))
 
         fig = plt.figure("TF2RL-Cookbook", figsize=[12, 6])
@@ -92,12 +99,7 @@ class TradeVisualizer(object):
         step_range = range(window_start, current_step + 1)
         date_range = self.ohlcv_df.index[current_step : current_step + len(step_range)]
         stock_df = self.ohlcv_df[self.ohlcv_df.index.isin(date_range)]
-        if "USD" in self.ticker:  # True for crypto-fiat currency pairs
-            # Use volume of the crypto currency for volume plot. A column with header="Volume" is required.
-            # Remove "USD" from self.ticker string and clone the crypto volume column
-            stock_df["Volume"] = stock_df[
-                "Volume " + self.ticker[:-3]
-            ]  # e.g: "Volume BTC"
+
         if self.viz_not_initialized:
             self.fig, self.axes = mpf.plot(
                 stock_df,
