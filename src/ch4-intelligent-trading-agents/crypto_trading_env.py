@@ -48,7 +48,7 @@ class CryptoTradingEnv(gym.Env):
         )
         assert os.path.isfile(
             self.ticker_file_stream
-        ), f"Historical crypto data file stream not found at: data/{self.ticker}.csv"
+        ), f"Crypto data file stream not found at: data/{self.ticker_file_stream}.csv"
         # Crypto exchange data stream. An offline file stream is used. Alternatively, a web
         # API can be used to pull live data.
         self.ohlcv_df = pd.read_csv(self.ticker_file_stream, skiprows=1).sort_values(
@@ -96,7 +96,7 @@ class CryptoTradingEnv(gym.Env):
         # Reset the state of the environment to an initial state
         self.cash_balance = self.opening_account_balance
         self.account_value = self.opening_account_balance
-        self.num_shares_held = 0
+        self.num_coins_held = 0
         self.cost_basis = 0
         self.current_step = 0
         self.trades = []
@@ -149,52 +149,52 @@ class CryptoTradingEnv(gym.Env):
             self.ohlcv_df.loc[self.current_step, "Close"],
         )
         if order_type == "buy":
-            allowable_shares = int(self.cash_balance / current_price)
-            if allowable_shares < self.order_size:
+            allowable_coins = int(self.cash_balance / current_price)
+            if allowable_coins < self.order_size:
                 # Not enough cash to execute a buy order
                 return
             # Simulate a BUY order and execute it at current_price
-            num_shares_bought = self.order_size
-            current_cost = self.cost_basis * self.num_shares_held
-            additional_cost = num_shares_bought * current_price
+            num_coins_bought = self.order_size
+            current_cost = self.cost_basis * self.num_coins_held
+            additional_cost = num_coins_bought * current_price
 
             self.cash_balance -= additional_cost
             self.cost_basis = (current_cost + additional_cost) / (
-                self.num_shares_held + num_shares_bought
+                self.num_coins_held + num_coins_bought
             )
-            self.num_shares_held += num_shares_bought
+            self.num_coins_held += num_coins_bought
 
             self.trades.append(
                 {
                     "type": "buy",
                     "step": self.current_step,
-                    "shares": num_shares_bought,
+                    "shares": num_coins_bought,
                     "proceeds": additional_cost,
                 }
             )
 
         elif order_type == "sell":
             # Simulate a SELL order and execute it at current_price
-            if self.num_shares_held < self.order_size:
+            if self.num_coins_held < self.order_size:
                 # Not enough coins to execute a sell order
                 return
-            num_shares_sold = self.order_size
-            self.cash_balance += num_shares_sold * current_price
-            self.num_shares_held -= num_shares_sold
-            sale_proceeds = num_shares_sold * current_price
+            num_coins_sold = self.order_size
+            self.cash_balance += num_coins_sold * current_price
+            self.num_coins_held -= num_coins_sold
+            sale_proceeds = num_coins_sold * current_price
 
             self.trades.append(
                 {
                     "type": "sell",
                     "step": self.current_step,
-                    "shares": num_shares_sold,
+                    "shares": num_coins_sold,
                     "proceeds": sale_proceeds,
                 }
             )
-        if self.num_shares_held == 0:
+        if self.num_coins_held == 0:
             self.cost_basis = 0
         # Update account value
-        self.account_value = self.cash_balance + self.num_shares_held * current_price
+        self.account_value = self.cash_balance + self.num_coins_held * current_price
 
 
 if __name__ == "__main__":

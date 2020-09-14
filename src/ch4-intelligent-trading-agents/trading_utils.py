@@ -92,6 +92,12 @@ class TradeVisualizer(object):
         step_range = range(window_start, current_step + 1)
         date_range = self.ohlcv_df.index[current_step : current_step + len(step_range)]
         stock_df = self.ohlcv_df[self.ohlcv_df.index.isin(date_range)]
+        if "USD" in self.ticker:  # True for crypto-fiat currency pairs
+            # Use volume of the crypto currency for volume plot. A column with header="Volume" is required.
+            # Remove "USD" from self.ticker string and clone the crypto volume column
+            stock_df["Volume"] = stock_df[
+                "Volume " + self.ticker[:-3]
+            ]  # e.g: "Volume BTC"
         if self.viz_not_initialized:
             self.fig, self.axes = mpf.plot(
                 stock_df,
@@ -147,7 +153,7 @@ class TradeVisualizer(object):
             colorup="g",
             colordown="r",
         )
-        self.price_ax.set_ylabel("Price ($)")
+        self.price_ax.set_ylabel(f"{self.ticker} Price ($)")
         self.price_ax.tick_params(axis="y", pad=30)
 
         last_date = self.ohlcv_df.index[current_step].strftime("%Y-%m-%d")
