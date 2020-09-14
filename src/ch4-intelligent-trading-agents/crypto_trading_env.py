@@ -28,7 +28,7 @@ class CryptoTradingEnv(gym.Env):
         Args:
             ticker (str, optional): Ticker symbol for the crypto-fiat currency pair.
             Defaults to "BTCUSD".
-            env_config (Dict): Env configuration parameters and values 
+            env_config (Dict): Env configuration parameters and values
         """
         super(CryptoTradingEnv, self).__init__()
         self.ticker = env_config.get("ticker", "BTCUSD")
@@ -71,7 +71,7 @@ class CryptoTradingEnv(gym.Env):
         self.observation_space = spaces.Box(
             low=0,
             high=1,
-            shape=(len(self.observation_features), self.horizon + 2),
+            shape=(len(self.observation_features), self.horizon + 1),
             dtype=np.float,
         )
         self.order_size = env_config.get("order_size")

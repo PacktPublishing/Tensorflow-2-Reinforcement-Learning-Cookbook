@@ -55,7 +55,7 @@ class StockTradingEnv(gym.Env):
         self.observation_space = spaces.Box(
             low=0,
             high=1,
-            shape=(len(self.observation_features), self.horizon + 2),
+            shape=(len(self.observation_features), self.horizon + 1),
             dtype=np.float,
         )
         self.order_size = env_config.get("order_size")
