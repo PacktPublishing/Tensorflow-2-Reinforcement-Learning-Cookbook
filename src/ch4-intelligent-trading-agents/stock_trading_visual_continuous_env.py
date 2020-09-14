@@ -127,6 +127,10 @@ class StockTradingVisualContinuousEnv(gym.Env):
 
     def execute_trade_action(self, action):
 
+        if action == 0:  # Indicates "Hold" action
+            # Hold position; No trade to be executed
+            return
+
         order_type = "buy" if action > 0 else "sell"
 
         order_fraction_of_allowable_shares = abs(action)

@@ -144,6 +144,9 @@ class CryptoTradingVisualContinuousEnv(gym.Env):
 
     def execute_trade_action(self, action):
 
+        if action == 0:  # Indicates "HODL" action
+            # HODL position; No trade to be executed
+            return
         order_type = "buy" if action > 0 else "sell"
 
         order_fraction_of_allowable_coins = abs(action)
