@@ -22,7 +22,7 @@ tf.keras.backend.set_floatx("float64")
 
 parser = argparse.ArgumentParser(prog="TFRL-Cookbook-Ch5-Click-To-Action-Agent")
 parser.add_argument("--env", default="MiniWoBClickButtonVisualEnv-v0")
-parser.add_argument("--update-freq", type=int, default=5)
+parser.add_argument("--update-freq", type=int, default=16)
 parser.add_argument("--epochs", type=int, default=3)
 parser.add_argument("--actor-lr", type=float, default=0.0005)
 parser.add_argument("--critic-lr", type=float, default=0.001)
@@ -46,6 +46,7 @@ class Actor:
         self.action_bound = action_bound
         self.std_bound = std_bound
         self.model = self.nn_model()
+        self.model.summary()  # Print a summary of the Actor model
         self.opt = tf.keras.optimizers.Adam(args.actor_lr)
 
     def nn_model(self):
@@ -59,7 +60,7 @@ class Actor:
             data_format="channels_last",
             activation="relu",
         )(obs_input)
-        pool1 = MaxPool2D(pool_size=(3, 3), strides=2)(conv1)
+        pool1 = MaxPool2D(pool_size=(3, 3), strides=1)(conv1)
         conv2 = Conv2D(
             filters=32,
             kernel_size=(3, 3),
@@ -67,13 +68,29 @@ class Actor:
             padding="valid",
             activation="relu",
         )(pool1)
-        pool2 = MaxPool2D(pool_size=(3, 3), strides=2)(conv2)
-        flat = Flatten()(pool2)
-        dense1 = Dense(128, activation="relu")(flat)
+        pool2 = MaxPool2D(pool_size=(3, 3), strides=1)(conv2)
+        conv3 = Conv2D(
+            filters=16,
+            kernel_size=(3, 3),
+            strides=(1, 1),
+            padding="valid",
+            activation="relu",
+        )(pool2)
+        pool3 = MaxPool2D(pool_size=(3, 3), strides=1)(conv3)
+        conv4 = Conv2D(
+            filters=8,
+            kernel_size=(3, 3),
+            strides=(1, 1),
+            padding="valid",
+            activation="relu",
+        )(pool3)
+        pool4 = MaxPool2D(pool_size=(3, 3), strides=1)(conv4)
+        flat = Flatten()(pool4)
+        dense1 = Dense(16, activation="relu")(flat)
         dropout1 = Dropout(0.3)(dense1)
-        dense2 = Dense(64, activation="relu")(dropout1)
+        dense2 = Dense(8, activation="relu")(dropout1)
         dropout2 = Dropout(0.3)(dense2)
-        output_val = Dense(self.action_dim[0], activation="tanh")(dropout2)
+        output_val = Dense(self.action_dim[0], activation="sigmoid")(dropout2)
         mu_output = Lambda(lambda x: x * self.action_bound)(output_val)
         std_output = Dense(self.action_dim[0], activation="softplus")(dropout2)
         return tf.keras.models.Model(obs_input, [mu_output, std_output])
