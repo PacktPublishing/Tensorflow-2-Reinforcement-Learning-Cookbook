@@ -11,8 +11,9 @@ class MiniWoBClickButtonVisualEnv(MiniWoBVisualEnv):
         super().__init__(self.miniwob_env_name, num_instances)
         self.task_width = 320
         self.task_height = 320
+        self.num_channels = 3  # RGB
         self.observation_space = gym.spaces.Box(
-            0, 255, (self.task_width, self.task_height), dtype=int
+            0, 255, (self.task_width, self.task_height, self.num_channels), dtype=int
         )
         self.action_space = gym.spaces.Box(
             low=np.array([0, 0]),
