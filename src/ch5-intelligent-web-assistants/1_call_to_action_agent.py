@@ -98,6 +98,7 @@ class Critic:
     def __init__(self, state_dim):
         self.state_dim = state_dim
         self.model = self.nn_model()
+        self.model.summary()  # Print a summary of the Critic model
         self.opt = tf.keras.optimizers.Adam(args.critic_lr)
 
     def nn_model(self):
@@ -120,10 +121,26 @@ class Critic:
             activation="relu",
         )(pool1)
         pool2 = MaxPool2D(pool_size=(3, 3), strides=2)(conv2)
-        flat = Flatten()(pool2)
-        dense1 = Dense(128, activation="relu")(flat)
+        conv3 = Conv2D(
+            filters=16,
+            kernel_size=(3, 3),
+            strides=(1, 1),
+            padding="valid",
+            activation="relu",
+        )(pool2)
+        pool3 = MaxPool2D(pool_size=(3, 3), strides=1)(conv3)
+        conv4 = Conv2D(
+            filters=8,
+            kernel_size=(3, 3),
+            strides=(1, 1),
+            padding="valid",
+            activation="relu",
+        )(pool3)
+        pool4 = MaxPool2D(pool_size=(3, 3), strides=1)(conv4)
+        flat = Flatten()(pool4)
+        dense1 = Dense(16, activation="relu")(flat)
         dropout1 = Dropout(0.3)(dense1)
-        dense2 = Dense(64, activation="relu")(dropout1)
+        dense2 = Dense(8, activation="relu")(dropout1)
         dropout2 = Dropout(0.3)(dense2)
         value = Dense(1, activation="linear")(dropout2)
 
