@@ -22,6 +22,23 @@ class MiniWoBClickButtonVisualEnv(MiniWoBVisualEnv):
             dtype=int,
         )
 
+    def reset(self, seeds=[1]):
+        """Forces stop and start all instances.
+
+        Args:
+            seeds (list[object]): Random seeds to set for each instance;
+                If specified, len(seeds) must be equal to the number of instances.
+                A None entry in the list = do not set a new seed.
+        Returns:
+            states (list[PIL.Image])
+        """
+        obs = super().reset(seeds)
+        # Click somewhere to Start!
+        # miniwob_state, _, _, _ = super().step(
+        #    self.num_instances * [MiniWoBCoordClick(10, 10)]
+        # )
+        return obs
+
     def step(self, actions):
         """Applies an action on each instance and returns the results.
 

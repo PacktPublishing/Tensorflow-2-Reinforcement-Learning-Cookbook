@@ -22,7 +22,7 @@ class MiniWoBVisualEnv(MiniWoBEnvironment, gym.Env):
         self.configure(num_instances=num_instances, seeds=seeds, base_url=self.base_url)
         # self.set_record_screenshots(True)
 
-    def reset(self, seeds=None, mode=None, record_screenshots=False):
+    def reset(self, seeds=[1], mode=None, record_screenshots=False):
         """Forces stop and start all instances.
 
         Args:
@@ -36,6 +36,7 @@ class MiniWoBVisualEnv(MiniWoBEnvironment, gym.Env):
             states (list[MiniWoBState])
         """
         miniwob_state = super().reset(seeds, mode, record_screenshots=True)
+
         return [state.screenshot for state in miniwob_state]
 
     def step(self, actions):
