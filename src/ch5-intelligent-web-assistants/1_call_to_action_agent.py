@@ -93,7 +93,52 @@ class Actor:
         output_val = Dense(self.action_dim[0], activation="sigmoid")(dropout2)
         mu_output = Lambda(lambda x: x * self.action_bound)(output_val)
         std_output = Dense(self.action_dim[0], activation="softplus")(dropout2)
-        return tf.keras.models.Model(obs_input, [mu_output, std_output])
+        return tf.keras.models.Model(
+            inputs=obs_input, outputs=[mu_output, std_output], name="Actor"
+        )
+
+    def get_action(self, state):
+        # Convert [Image] to np.array(np.adarray)
+        state_np = np.array([np.array(s) for s in state])
+        if len(state_np.shape) == 3:
+            # Convert (w, h, c) to (1, w, h, c)
+            state_np = np.expand_dims(state_np, 0)
+        mu, std = self.model.predict(state_np)
+        action = np.random.normal(mu, std, size=self.action_dim).astype("int")
+        # Clip action to be between 0 and max obs screen size
+        action = np.clip(action, 0, self.action_bound)
+        # 1 Action per instance of env; Env expects: (num_instances, actions)
+        action = (action,)
+        log_policy = self.log_pdf(mu, std, action)
+        return log_policy, action
+
+    def log_pdf(self, mu, std, action):
+        std = tf.clip_by_value(std, self.std_bound[0], self.std_bound[1])
+        var = std ** 2
+        log_policy_pdf = -0.5 * (action - mu) ** 2 / var - 0.5 * tf.math.log(
+            var * 2 * np.pi
+        )
+        return tf.reduce_sum(log_policy_pdf, 1, keepdims=True)
+
+    def compute_loss(self, log_old_policy, log_new_policy, actions, gaes):
+        ratio = tf.exp(log_new_policy - tf.stop_gradient(log_old_policy))
+        gaes = tf.stop_gradient(gaes)
+        clipped_ratio = tf.clip_by_value(
+            ratio, 1.0 - args.clip_ratio, 1.0 + args.clip_ratio
+        )
+        surrogate = -tf.minimum(ratio * gaes, clipped_ratio * gaes)
+        return tf.reduce_mean(surrogate)
+
+    def train(self, log_old_policy, states, actions, gaes):
+        with tf.GradientTape() as tape:
+            mu, std = self.model(states, training=True)
+            log_new_policy = self.log_pdf(mu, std, actions)
+            loss = self.compute_loss(log_old_policy, log_new_policy, actions, gaes)
+        grads = tape.gradient(loss, self.model.trainable_variables)
+        self.opt.apply_gradients(zip(grads, self.model.trainable_variables))
+        return loss
+
+
 class Critic:
     def __init__(self, state_dim):
         self.state_dim = state_dim
