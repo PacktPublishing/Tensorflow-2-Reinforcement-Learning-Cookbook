@@ -16,6 +16,7 @@ from tensorflow.keras.layers import (
     Flatten,
 )
 
+import webgym  # Used to register webgym environments
 
 tf.keras.backend.set_floatx("float64")
 
@@ -203,3 +204,119 @@ class Critic:
         grads = tape.gradient(loss, self.model.trainable_variables)
         self.opt.apply_gradients(zip(grads, self.model.trainable_variables))
         return loss
+
+
+class PPOAgent:
+    def __init__(self, env):
+        self.env = env
+        self.state_dim = self.env.observation_space.shape
+        self.action_dim = self.env.action_space.shape
+        self.action_bound = self.env.action_space.high
+        self.std_bound = [1e-2, 1.0]
+
+        self.actor_opt = tf.keras.optimizers.Adam(args.actor_lr)
+        self.critic_opt = tf.keras.optimizers.Adam(args.critic_lr)
+        self.actor = Actor(
+            self.state_dim, self.action_dim, self.action_bound, self.std_bound
+        )
+        self.critic = Critic(self.state_dim)
+
+    def gae_target(self, rewards, v_values, next_v_value, done):
+        n_step_targets = np.zeros_like(rewards)
+        gae = np.zeros_like(rewards)
+        gae_cumulative = 0
+        forward_val = 0
+
+        if not done:
+            forward_val = next_v_value
+
+        for k in reversed(range(0, len(rewards))):
+            delta = rewards[k] + args.gamma * forward_val - v_values[k]
+            gae_cumulative = args.gamma * args.gae_lambda * gae_cumulative + delta
+            gae[k] = gae_cumulative
+            forward_val = v_values[k]
+            n_step_targets[k] = gae[k] + v_values[k]
+        return gae, n_step_targets
+
+    def train(self, max_episodes=1000):
+        with writer.as_default():
+            for ep in range(max_episodes):
+                state_batch = []
+                action_batch = []
+                reward_batch = []
+                old_policy_batch = []
+
+                episode_reward, done = 0, False
+
+                state = self.env.reset()
+                prev_state = state
+
+                while not done:
+                    # self.env.render()
+                    log_old_policy, action = self.actor.get_action(state)
+
+                    next_state, reward, dones, _ = self.env.step(action)
+                    print(f"ep#:{ep} step_rew:{reward} action:{action} dones:{dones}")
+                    done = np.all(dones)
+                    if done:
+                        next_state = prev_state
+                    else:
+                        prev_state = next_state
+                    state = np.array([np.array(s) for s in state])
+                    next_state = np.array([np.array(s) for s in next_state])
+                    reward = np.reshape(reward, [1, 1])
+                    log_old_policy = np.reshape(log_old_policy, [1, 1])
+
+                    state_batch.append(state)
+                    action_batch.append(action)
+                    reward_batch.append((reward + 8) / 8)
+                    old_policy_batch.append(log_old_policy)
+
+                    if len(state_batch) >= args.update_freq or done:
+                        states = np.array([state.squeeze() for state in state_batch])
+                        # Convert ([x, y],) to [x, y]
+                        actions = np.array([action[0] for action in action_batch])
+                        rewards = np.array(
+                            [reward.squeeze() for reward in reward_batch]
+                        )
+                        old_policies = np.array(
+                            [old_pi.squeeze() for old_pi in old_policy_batch]
+                        )
+
+                        v_values = self.critic.model.predict(states)
+                        next_v_value = self.critic.model.predict(next_state)
+
+                        gaes, td_targets = self.gae_target(
+                            rewards, v_values, next_v_value, done
+                        )
+                        actor_losses, critic_losses = [], []
+                        for epoch in range(args.epochs):
+                            actor_loss = self.actor.train(
+                                old_policies, states, actions, gaes
+                            )
+                            actor_losses.append(actor_loss)
+                            critic_loss = self.critic.train(states, td_targets)
+                            critic_losses.append(critic_loss)
+                        # Plot mean actor & critic losses on every update
+                        tf.summary.scalar("actor_loss", np.mean(actor_losses), step=ep)
+                        tf.summary.scalar(
+                            "critic_loss", np.mean(critic_losses), step=ep
+                        )
+
+                        state_batch = []
+                        action_batch = []
+                        reward_batch = []
+                        old_policy_batch = []
+
+                    episode_reward += reward[0][0]
+                    state = next_state[0]
+
+                print(f"Episode#{ep} Reward:{episode_reward} Actions:{action_batch}")
+                tf.summary.scalar("episode_reward", episode_reward, step=ep)
+
+
+if __name__ == "__main__":
+    env_name = "MiniWoBClickButtonVisualEnv-v0"
+    env = gym.make(env_name)
+    cta_agent = PPOAgent(env)
+    cta_agent.train()
