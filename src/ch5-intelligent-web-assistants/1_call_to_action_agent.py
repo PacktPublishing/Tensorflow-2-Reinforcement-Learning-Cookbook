@@ -189,4 +189,17 @@ class Critic:
         dropout2 = Dropout(0.3)(dense2)
         value = Dense(1, activation="linear")(dropout2)
 
-        return tf.keras.models.Model(obs_input, value)
+        return tf.keras.models.Model(inputs=obs_input, outputs=value, name="Critic")
+
+    def compute_loss(self, v_pred, td_targets):
+        mse = tf.keras.losses.MeanSquaredError()
+        return mse(td_targets, v_pred)
+
+    def train(self, states, td_targets):
+        with tf.GradientTape() as tape:
+            v_pred = self.model(states, training=True)
+            # assert v_pred.shape == td_targets.shape
+            loss = self.compute_loss(v_pred, tf.stop_gradient(td_targets))
+        grads = tape.gradient(loss, self.model.trainable_variables)
+        self.opt.apply_gradients(zip(grads, self.model.trainable_variables))
+        return loss
