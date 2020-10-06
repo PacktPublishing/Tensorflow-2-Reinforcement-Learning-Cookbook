@@ -8,12 +8,19 @@ from miniwob.action import MiniWoBCoordClick
 class MiniWoBClickButtonVisualEnv(MiniWoBVisualEnv):
     def __init__(self, num_instances=1):
         self.miniwob_env_name = "click-button"
-        super().__init__(self.miniwob_env_name, num_instances)
-        self.task_width = 320
-        self.task_height = 320
+        self.task_width = 160
+        self.task_height = 210
+        self.obs_im_width = 64
+        self.obs_im_height = 64
         self.num_channels = 3  # RGB
+        self.obs_im_size = (self.obs_im_width, self.obs_im_height)
+        super().__init__(self.miniwob_env_name, self.obs_im_size, num_instances)
+
         self.observation_space = gym.spaces.Box(
-            0, 255, (self.task_width, self.task_height, self.num_channels), dtype=int
+            0,
+            255,
+            (self.obs_im_width, self.obs_im_height, self.num_channels),
+            dtype=int,
         )
         self.action_space = gym.spaces.Box(
             low=np.array([0, 0]),

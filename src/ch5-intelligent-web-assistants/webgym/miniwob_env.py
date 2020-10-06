@@ -1,6 +1,7 @@
 import os
 
 import gym
+from PIL import Image
 
 from miniwob.action import MiniWoBCoordClick
 from miniwob.environment import MiniWoBEnvironment
@@ -13,6 +14,7 @@ class MiniWoBVisualEnv(MiniWoBEnvironment, gym.Env):
     def __init__(
         self,
         env_name: str,
+        obs_im_shape,
         num_instances: int = 1,
         miniwob_dir: str = miniwob_dir,
         seeds: list = [1],
@@ -21,6 +23,7 @@ class MiniWoBVisualEnv(MiniWoBEnvironment, gym.Env):
         self.base_url = f"file://{miniwob_dir}"
         self.configure(num_instances=num_instances, seeds=seeds, base_url=self.base_url)
         # self.set_record_screenshots(True)
+        self.obs_im_shape = obs_im_shape
 
     def reset(self, seeds=[1], mode=None, record_screenshots=False):
         """Forces stop and start all instances.
@@ -37,7 +40,10 @@ class MiniWoBVisualEnv(MiniWoBEnvironment, gym.Env):
         """
         miniwob_state = super().reset(seeds, mode, record_screenshots=True)
 
-        return [state.screenshot for state in miniwob_state]
+        return [
+            state.screenshot.resize(self.obs_im_shape, Image.ANTIALIAS)
+            for state in miniwob_state
+        ]
 
     def step(self, actions):
         """Applies an action on each instance and returns the results.
@@ -55,8 +61,10 @@ class MiniWoBVisualEnv(MiniWoBEnvironment, gym.Env):
                     Local information for instance i is in info['n'][i]
         """
         states, rewards, dones, info = super().step(actions)
+        # Obtain screenshot & Resize image obs to match config
         img_states = [
-            state.screenshot if not dones[i] else None for i, state in enumerate(states)
+            state.screenshot.resize(self.obs_im_shape) if not dones[i] else None
+            for i, state in enumerate(states)
         ]
         return img_states, rewards, dones, info
 
