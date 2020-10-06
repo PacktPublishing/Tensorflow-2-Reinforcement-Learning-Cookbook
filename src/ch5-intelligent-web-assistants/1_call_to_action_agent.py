@@ -145,7 +145,11 @@ class Actor:
         return tf.reduce_sum(log_policy_pdf, 1, keepdims=True)
 
     def compute_loss(self, log_old_policy, log_new_policy, actions, gaes):
-        ratio = tf.exp(log_new_policy - tf.stop_gradient(log_old_policy))
+        # Avoid INF in exp by setting 80 as the upper bound since,
+        # tf.exp(x) for x>88 yeilds NaN (float32)
+        ratio = tf.exp(
+            tf.minimum(log_new_policy - tf.stop_gradient(log_old_policy), 80)
+        )
         gaes = tf.stop_gradient(gaes)
         clipped_ratio = tf.clip_by_value(
             ratio, 1.0 - args.clip_ratio, 1.0 + args.clip_ratio
