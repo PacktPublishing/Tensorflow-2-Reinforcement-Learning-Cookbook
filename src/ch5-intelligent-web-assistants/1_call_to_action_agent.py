@@ -19,13 +19,12 @@ import webgym  # Used to register webgym environments
 
 tf.keras.backend.set_floatx("float64")
 
-
 parser = argparse.ArgumentParser(prog="TFRL-Cookbook-Ch5-Click-To-Action-Agent")
 parser.add_argument("--env", default="MiniWoBClickButtonVisualEnv-v0")
 parser.add_argument("--update-freq", type=int, default=16)
 parser.add_argument("--epochs", type=int, default=3)
-parser.add_argument("--actor-lr", type=float, default=0.0005)
-parser.add_argument("--critic-lr", type=float, default=0.001)
+parser.add_argument("--actor-lr", type=float, default=1e-3)
+parser.add_argument("--critic-lr", type=float, default=1e-3)
 parser.add_argument("--clip-ratio", type=float, default=0.1)
 parser.add_argument("--gae-lambda", type=float, default=0.95)
 parser.add_argument("--gamma", type=float, default=0.99)
@@ -43,12 +42,13 @@ class Actor:
     def __init__(self, state_dim, action_dim, action_bound, std_bound):
         self.state_dim = state_dim
         self.action_dim = action_dim
-        self.action_bound = action_bound
+        self.action_bound = np.array(action_bound)
         self.std_bound = std_bound
+        self.weight_initializer = tf.keras.initializers.he_normal()
+        self.eps = 1e-5
         self.model = self.nn_model()
         self.model.summary()  # Print a summary of the Actor model
-        self.opt = tf.keras.optimizers.Adam(args.actor_lr)
-        self.eps = 1e-5
+        self.opt = tf.keras.optimizers.Nadam(args.actor_lr)
 
     def nn_model(self):
         obs_input = Input(self.state_dim)
@@ -87,20 +87,34 @@ class Actor:
         )(pool3)
         pool4 = MaxPool2D(pool_size=(3, 3), strides=1)(conv4)
         flat = Flatten()(pool4)
-        dense1 = Dense(16, activation="relu")(flat)
+        dense1 = Dense(
+            16, activation="relu", kernel_initializer=self.weight_initializer
+        )(flat)
         dropout1 = Dropout(0.3)(dense1)
-        dense2 = Dense(8, activation="relu")(dropout1)
+        dense2 = Dense(
+            8, activation="relu", kernel_initializer=self.weight_initializer
+        )(dropout1)
         dropout2 = Dropout(0.3)(dense2)
         # action_dim[0] = 2
-        output_val = Dense(self.action_dim[0], activation="relu")(dropout2)
-        # clip x[i] to be in range [0, action_bound[i]]
-        mu_output = Lambda(lambda x: tf.clip_by_value(x, 0, self.action_bound))(
-            output_val
-        )
-        std_output = Dense(self.action_dim[0], activation="softplus")(dropout2)
+        output_val = Dense(
+            self.action_dim[0],
+            activation="relu",
+            kernel_initializer=self.weight_initializer,
+        )(dropout2)
+        # Scale & clip x[i] to be in range [0, action_bound[i]]
+        mu_output = Lambda(
+            lambda x: tf.clip_by_value(x * self.action_bound, 1e-9, self.action_bound)
+        )(output_val)
+        std_output_1 = Dense(
+            self.action_dim[0],
+            activation="softplus",
+            kernel_initializer=self.weight_initializer,
+        )(dropout2)
         std_output = Lambda(
-            lambda x: tf.clip_by_value(x, 0, np.array(self.action_bound) / 2)
-        )(std_output)
+            lambda x: tf.clip_by_value(
+                x * self.action_bound, 1e-9, self.action_bound / 2
+            )
+        )(std_output_1)
         return tf.keras.models.Model(
             inputs=obs_input, outputs=[mu_output, std_output], name="Actor"
         )
@@ -152,9 +166,10 @@ class Actor:
 class Critic:
     def __init__(self, state_dim):
         self.state_dim = state_dim
+        self.weight_initializer = tf.keras.initializers.he_normal()
         self.model = self.nn_model()
         self.model.summary()  # Print a summary of the Critic model
-        self.opt = tf.keras.optimizers.Adam(args.critic_lr)
+        self.opt = tf.keras.optimizers.Nadam(args.critic_lr)
 
     def nn_model(self):
         obs_input = Input(self.state_dim)
@@ -193,11 +208,17 @@ class Critic:
         )(pool3)
         pool4 = MaxPool2D(pool_size=(3, 3), strides=1)(conv4)
         flat = Flatten()(pool4)
-        dense1 = Dense(16, activation="relu")(flat)
+        dense1 = Dense(
+            16, activation="relu", kernel_initializer=self.weight_initializer
+        )(flat)
         dropout1 = Dropout(0.3)(dense1)
-        dense2 = Dense(8, activation="relu")(dropout1)
+        dense2 = Dense(
+            8, activation="relu", kernel_initializer=self.weight_initializer
+        )(dropout1)
         dropout2 = Dropout(0.3)(dense2)
-        value = Dense(1, activation="linear")(dropout2)
+        value = Dense(
+            1, activation="linear", kernel_initializer=self.weight_initializer
+        )(dropout2)
 
         return tf.keras.models.Model(inputs=obs_input, outputs=value, name="Critic")
 
@@ -224,8 +245,6 @@ class PPOAgent:
         self.action_bound = [self.env.task_width, self.env.task_height]
         self.std_bound = [1e-2, 1.0]
 
-        self.actor_opt = tf.keras.optimizers.Adam(args.actor_lr)
-        self.critic_opt = tf.keras.optimizers.Adam(args.critic_lr)
         self.actor = Actor(
             self.state_dim, self.action_dim, self.action_bound, self.std_bound
         )
