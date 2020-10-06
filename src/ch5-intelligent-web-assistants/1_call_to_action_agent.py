@@ -10,7 +10,6 @@ from tensorflow.keras.layers import (
     Input,
     Lambda,
     Conv2D,
-    Activation,
     MaxPool2D,
     Dropout,
     Flatten,
@@ -49,6 +48,7 @@ class Actor:
         self.model = self.nn_model()
         self.model.summary()  # Print a summary of the Actor model
         self.opt = tf.keras.optimizers.Adam(args.actor_lr)
+        self.eps = 1e-5
 
     def nn_model(self):
         obs_input = Input(self.state_dim)
@@ -91,9 +91,16 @@ class Actor:
         dropout1 = Dropout(0.3)(dense1)
         dense2 = Dense(8, activation="relu")(dropout1)
         dropout2 = Dropout(0.3)(dense2)
-        output_val = Dense(self.action_dim[0], activation="sigmoid")(dropout2)
-        mu_output = Lambda(lambda x: x * self.action_bound)(output_val)
+        # action_dim[0] = 2
+        output_val = Dense(self.action_dim[0], activation="relu")(dropout2)
+        # clip x[i] to be in range [0, action_bound[i]]
+        mu_output = Lambda(lambda x: tf.clip_by_value(x, 0, self.action_bound))(
+            output_val
+        )
         std_output = Dense(self.action_dim[0], activation="softplus")(dropout2)
+        std_output = Lambda(
+            lambda x: tf.clip_by_value(x, 0, np.array(self.action_bound) / 2)
+        )(std_output)
         return tf.keras.models.Model(
             inputs=obs_input, outputs=[mu_output, std_output], name="Actor"
         )
@@ -105,7 +112,9 @@ class Actor:
             # Convert (w, h, c) to (1, w, h, c)
             state_np = np.expand_dims(state_np, 0)
         mu, std = self.model.predict(state_np)
-        action = np.random.normal(mu, std, size=self.action_dim).astype("int")
+        action = np.random.normal(mu, std + self.eps, size=self.action_dim).astype(
+            "int"
+        )
         # Clip action to be between 0 and max obs screen size
         action = np.clip(action, 0, self.action_bound)
         # 1 Action per instance of env; Env expects: (num_instances, actions)
@@ -211,7 +220,8 @@ class PPOAgent:
         self.env = env
         self.state_dim = self.env.observation_space.shape
         self.action_dim = self.env.action_space.shape
-        self.action_bound = self.env.action_space.high
+        # Set action_bounds to be within the actual task-window/browser-view of the agent
+        self.action_bound = [self.env.task_width, self.env.task_height]
         self.std_bound = [1e-2, 1.0]
 
         self.actor_opt = tf.keras.optimizers.Adam(args.actor_lr)
@@ -250,13 +260,17 @@ class PPOAgent:
 
                 state = self.env.reset()
                 prev_state = state
+                step_num = 0
 
                 while not done:
                     # self.env.render()
                     log_old_policy, action = self.actor.get_action(state)
 
                     next_state, reward, dones, _ = self.env.step(action)
-                    print(f"ep#:{ep} step_rew:{reward} action:{action} dones:{dones}")
+                    step_num += 1
+                    print(
+                        f"ep#:{ep} step#:{step_num} step_rew:{reward} action:{action} dones:{dones}"
+                    )
                     done = np.all(dones)
                     if done:
                         next_state = prev_state
