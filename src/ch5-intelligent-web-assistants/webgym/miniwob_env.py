@@ -10,7 +10,7 @@ cur_path_dir = os.path.dirname(os.path.realpath(__file__))
 miniwob_dir = os.path.join(cur_path_dir, "miniwob", "html", "miniwob")
 
 
-class MiniWoBVisualEnv(MiniWoBEnvironment, gym.Env):
+class MiniWoBEnv(MiniWoBEnvironment, gym.Env):
     def __init__(
         self,
         env_name: str,

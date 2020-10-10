@@ -10,7 +10,23 @@ _AVAILABLE_ENVS = {
     "MiniWoBClickButtonVisualEnv-v0": {
         "entry_point": "webgym.envs:MiniWoBClickButtonVisualEnv",
         "discription": "Click the button on a web page",
-    }
+    },
+    "MiniWoBEmailInboxImportantVisualEnv-v0": {
+        "entry_point": "webgym.envs:MiniWoBEmailInboxImportantVisualEnv",
+        "discription": "Mark email as important",
+    },
+    "MiniWoBBookFlightVisualEnv-v0": {
+        "entry_point": "webgym.envs:MiniWoBBookFlightVisualEnv",
+        "discription": "Book flight",
+    },
+    "MiniWoBSocialMediaMuteUserVisualEnv-v0": {
+        "entry_point": "webgym.envs:MiniWoBSocialMediaMuteUserVisualEnv",
+        "discription": "Mute User on Social Media (Twitter-like) webpages",
+    },
+    "MiniWoBSocialMediaReplyVisualEnv-v0": {
+        "entry_point": "webgym.envs:MiniWoBSocialMediaReplyUserVisualEnv",
+        "discription": "Click Reply to users on Social Media (Twitter-like) webpages",
+    },
 }
 
 

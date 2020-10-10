@@ -1,13 +1,13 @@
 import gym.spaces
 import numpy as np
 
-from miniwob_env import MiniWoBVisualEnv
-from miniwob.action import MiniWoBCoordClick
+from miniwob_env import MiniWoBEnv
+from miniwob.action import MiniWoBCoordClick, 
 
 
-class MiniWoBClickButtonVisualEnv(MiniWoBVisualEnv):
-    def __init__(self, num_instances=1):
-        self.miniwob_env_name = "click-button"
+class MiniWoBVisualClickEnv(MiniWoBEnv):
+    def __init__(self, name, num_instances=1):
+        self.miniwob_env_name = name
         self.task_width = 160
         self.task_height = 210
         self.obs_im_width = 64
@@ -80,3 +80,28 @@ class MiniWoBClickButtonVisualEnv(MiniWoBVisualEnv):
             for action in actions
         ]
         return super().step(miniwob_actions)
+
+
+class MiniWoBClickButtonVisualEnv(MiniWoBVisualClickEnv):
+    def __init__(self, num_instances=1):
+        super().__init__("click-button", num_instances)
+
+
+class MiniWoBEmailInboxImportantVisualEnv(MiniWoBVisualClickEnv):
+    def __init__(self, num_instances=1):
+        super().__init__("email-inbox-important", num_instances)
+
+
+class MiniWoBBookFlightVisualEnv(MiniWoBVisualClickEnv):
+    def __init__(self, num_instances=1):
+        super().__init__("book-flight", num_instances)
+
+
+class MiniWoBSocialMediaMuteUserVisualEnv(MiniWoBVisualClickEnv):
+    def __init__(self, num_instances=1):
+        super().__init__("social-media", num_instances)
+
+
+class MiniWoBSocialMediaReplyVisualEnv(MiniWoBVisualClickEnv):
+    def __init__(self, num_instances=1):
+        super().__init__("social-media-some", num_instances)
