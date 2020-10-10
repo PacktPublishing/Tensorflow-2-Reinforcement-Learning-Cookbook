@@ -2,7 +2,7 @@ import gym.spaces
 import numpy as np
 
 from miniwob_env import MiniWoBEnv
-from miniwob.action import MiniWoBCoordClick, 
+from miniwob.action import MiniWoBCoordClick
 
 
 class MiniWoBVisualClickEnv(MiniWoBEnv):
@@ -88,6 +88,10 @@ class MiniWoBClickButtonVisualEnv(MiniWoBVisualClickEnv):
 
 
 class MiniWoBEmailInboxImportantVisualEnv(MiniWoBVisualClickEnv):
+    """Train RL agents to automate email-management tasks
+    E.g.: Find emails from specific person and mark them as important
+    """
+
     def __init__(self, num_instances=1):
         super().__init__("email-inbox-important", num_instances)
 
