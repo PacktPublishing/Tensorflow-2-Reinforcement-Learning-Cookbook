@@ -113,7 +113,10 @@ class MiniWoBVisualClickAndTypeEnv(MiniWoBEnv):
         self.obs_im_size = (self.obs_im_width, self.obs_im_height)
         super().__init__(self.miniwob_env_name, self.obs_im_size, num_instances)
         # Generate an index mapped character list: ["", a, b, c, ... x, y, z, " "]
-        self.key_action_map = list("" + string.ascii_uppercase + " ")
+        self.key_action_map = {
+            i: x for (i, x) in enumerate(list("" + string.ascii_uppercase + " "))
+        }
+        self.num_allowed_chars = len(self.key_action_map) - 1
 
         self.observation_space = gym.spaces.Box(
             0,
@@ -124,9 +127,7 @@ class MiniWoBVisualClickAndTypeEnv(MiniWoBEnv):
         # Action: [x, y, character]
         self.action_space = gym.spaces.Box(
             low=np.array([0, 0, 0]),
-            high=np.array(
-                [self.task_width, self.task_height, len(self.key_action_map) - 1]
-            ),
+            high=np.array([self.task_width, self.task_height, self.num_allowed_chars]),
             shape=(3,),
             dtype=int,
         )
@@ -167,25 +168,32 @@ class MiniWoBVisualClickAndTypeEnv(MiniWoBEnv):
         ), f"Expected len(actions)={self.num_instances}. Got {len(actions)}."
 
         def clamp(action, low=self.action_space.low, high=self.action_space.high):
-            low_x, low_y = low
-            high_x, high_y = high
+            low_x, low_y, low_char_idx = low
+            high_x, high_y, high_char_idx = high
             return (
                 max(low_x, min(action[0], high_x)),
                 max(low_y, min(action[1], high_y)),
+                max(low_char_idx, min(action[2], high_char_idx)),
             )
 
+        clamped_actions = [
+            clamp(action) if action is not None else None for action in actions
+        ]
+
         miniwob_click_actions = [
-            MiniWoBCoordClick(*clamp(action[:2])) if action is not None else None
-            for action in actions
+            MiniWoBCoordClick(*clamped_action[:2])
+            if clamped_action is not None
+            else None
+            for clamped_action in clamped_actions
         ]
         # Execute the click action first
         _ = super().step(miniwob_click_actions)
         # Execute the type action next & return
         miniwob_type_actions = [
-            MiniWoBType(self.key_action_map.get(action[3], ""))
-            if action is not None
+            MiniWoBType(self.key_action_map.get(clamped_action[2], ""))
+            if clamped_action is not None
             else None
-            for action in actions
+            for clamped_action in clamped_actions
         ]
         return super().step(miniwob_type_actions)
 
@@ -204,11 +212,6 @@ class MiniWoBEmailInboxImportantVisualEnv(MiniWoBVisualClickEnv):
         super().__init__("email-inbox-important", num_instances)
 
 
-class MiniWoBBookFlightVisualEnv(MiniWoBVisualClickEnv):
-    def __init__(self, num_instances=1):
-        super().__init__("book-flight", num_instances)
-
-
 class MiniWoBSocialMediaMuteUserVisualEnv(MiniWoBVisualClickEnv):
     def __init__(self, num_instances=1):
         super().__init__("social-media", num_instances)
@@ -217,3 +220,13 @@ class MiniWoBSocialMediaMuteUserVisualEnv(MiniWoBVisualClickEnv):
 class MiniWoBSocialMediaReplyVisualEnv(MiniWoBVisualClickEnv):
     def __init__(self, num_instances=1):
         super().__init__("social-media-some", num_instances)
+
+
+class MiniWoBBookFlightVisualEnv(MiniWoBVisualClickAndTypeEnv):
+    def __init__(self, num_instances=1):
+        super().__init__("book-flight", num_instances)
+
+
+class MiniWoBLoginUserVisualEnv(MiniWoBVisualClickAndTypeEnv):
+    def __init__(self, num_instances=1):
+        super().__init__("login-user", num_instances)

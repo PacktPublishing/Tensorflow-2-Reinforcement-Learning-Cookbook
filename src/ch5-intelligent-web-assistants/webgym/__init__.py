@@ -27,6 +27,10 @@ _AVAILABLE_ENVS = {
         "entry_point": "webgym.envs:MiniWoBSocialMediaReplyUserVisualEnv",
         "discription": "Click Reply to users on Social Media (Twitter-like) webpages",
     },
+    "MiniWoBLoginUserVisualEnv-v0": {
+        "entry_point": "webgym.envs:MiniWoBLoginUserVisualEnv",
+        "discription": "Login user",
+    },
 }
 
 
