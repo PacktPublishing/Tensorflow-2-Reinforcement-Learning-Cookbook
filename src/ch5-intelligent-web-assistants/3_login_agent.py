@@ -303,8 +303,13 @@ class PPOAgent:
 
                     next_state, reward, dones, _ = self.env.step(action)
                     step_num += 1
+                     # Convert action[2] from int idx to char for verbose printing
+                    action_print = []
+                    for a in action:  # Map apply
+                        action_verbose = (a[:2], self.get_typed_char(a[2]))
+                        action_print.append(action_verbose)
                     print(
-                        f"ep#:{ep} step#:{step_num} step_rew:{reward} action:{action} dones:{dones}"
+                        f"ep#:{ep} step#:{step_num} step_rew:{reward} action:{action_print} dones:{dones}"
                     )
                     done = np.all(dones)
                     if done:

@@ -281,7 +281,7 @@ class PPOAgent:
         Args:
             action (int): Character index represented by action[2]
         """
-        return self.env.key_action_map.get(action_2, "")
+        return self.env.key_action_map.get(int(action_2), "")
 
     def train(self, max_episodes=1000):
         with writer.as_default():
@@ -303,8 +303,14 @@ class PPOAgent:
 
                     next_state, reward, dones, _ = self.env.step(action)
                     step_num += 1
+
+                    # Convert action[2] from int idx to char for verbose printing
+                    action_print = []
+                    for a in action:  # Map apply
+                        action_verbose = (a[:2], self.get_typed_char(a[2]))
+                        action_print.append(action_verbose)
                     print(
-                        f"ep#:{ep} step#:{step_num} step_rew:{reward} action:{action} dones:{dones}"
+                        f"ep#:{ep} step#:{step_num} step_rew:{reward} action:{action_print} dones:{dones}"
                     )
                     done = np.all(dones)
                     if done:
@@ -359,8 +365,7 @@ class PPOAgent:
 
                     episode_reward += reward[0][0]
                     state = next_state[0]
-                for action in action_batch:
-                    action[2] = self.get_typed_char(action[2])
+
                 print(f"Episode#{ep} Reward:{episode_reward} Actions:{action_batch}")
                 tf.summary.scalar("episode_reward", episode_reward, step=ep)
 

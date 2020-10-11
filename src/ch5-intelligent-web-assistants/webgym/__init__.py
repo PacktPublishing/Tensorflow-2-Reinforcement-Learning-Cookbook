@@ -24,7 +24,7 @@ _AVAILABLE_ENVS = {
         "discription": "Mute User on Social Media (Twitter-like) webpages",
     },
     "MiniWoBSocialMediaReplyVisualEnv-v0": {
-        "entry_point": "webgym.envs:MiniWoBSocialMediaReplyUserVisualEnv",
+        "entry_point": "webgym.envs:MiniWoBSocialMediaReplyVisualEnv",
         "discription": "Click Reply to users on Social Media (Twitter-like) webpages",
     },
     "MiniWoBLoginUserVisualEnv-v0": {
