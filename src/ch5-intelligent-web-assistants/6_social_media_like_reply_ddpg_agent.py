@@ -7,15 +7,15 @@ from datetime import datetime
 import gym
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.layers import Dense, Input, Lambda, concatenate
 from tensorflow.keras.layers import (
-    Dense,
-    Input,
-    Lambda,
     Conv2D,
-    MaxPool2D,
+    Dense,
     Dropout,
     Flatten,
+    Input,
+    Lambda,
+    MaxPool2D,
+    concatenate,
 )
 
 import webgym  # Used to register webgym environments

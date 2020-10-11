@@ -6,13 +6,13 @@ import gym
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.layers import (
-    Dense,
-    Input,
-    Lambda,
     Conv2D,
-    MaxPool2D,
+    Dense,
     Dropout,
     Flatten,
+    Input,
+    Lambda,
+    MaxPool2D,
 )
 
 import webgym  # Used to register webgym environments
@@ -303,7 +303,7 @@ class PPOAgent:
 
                     next_state, reward, dones, _ = self.env.step(action)
                     step_num += 1
-                     # Convert action[2] from int idx to char for verbose printing
+                    # Convert action[2] from int idx to char for verbose printing
                     action_print = []
                     for a in action:  # Map apply
                         action_verbose = (a[:2], self.get_typed_char(a[2]))
