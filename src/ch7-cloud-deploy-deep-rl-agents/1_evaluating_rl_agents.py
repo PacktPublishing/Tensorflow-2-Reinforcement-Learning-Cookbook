@@ -8,7 +8,7 @@ import gym
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import tradegym  # Register tradegym envs with OpenAI Gym registry
-from sac_agent import SAC
+from sac_agent_runtime import SAC
 
 parser = ArgumentParser(prog="TFRL-Cookbook-Ch7-Evaluating-RL-Agents")
 parser.add_argument("--agent", default="SAC", help="Name of Agent. Default=SAC")
@@ -45,8 +45,9 @@ if __name__ == "__main__":
     env = gym.make(args.env)
     if args.agent != "SAC":
         print(f"Unsupported Agent: {args.agent}. Using SAC Agent")
+        args.agent = "SAC"
     # Create an instance of the Soft Actor-Critic Agent
-    agent = SAC(env)
+    agent = SAC(env.observation_space.shape, env.action_space)
     # Load trained Agent model/brain
     model_version = "episode100"
     agent.load_actor(
@@ -55,10 +56,9 @@ if __name__ == "__main__":
     agent.load_critic(
         os.path.join(args.trained_models_dir, f"sac_critic_{model_version}.h5")
     )
-    print(f"Loaded SAC agent")
+    print(f"Loaded {args.agent} agent with trained model version:{model_version}")
     render = args.render
     # Evaluate/Test/Rollout Agent with trained model/brain
-    # rewards = agent.test()
     video = imageio.get_writer("agent_eval_video.mp4", fps=30)
     avg_reward = 0
     for i in range(args.num_episodes):

@@ -51,7 +51,8 @@ def update_target_weights(model, target_model, tau=0.005):
 class SAC(object):
     def __init__(
         self,
-        env,
+        observation_shape,
+        action_space,
         lr_actor=3e-5,
         lr_critic=3e-4,
         actor_units=(64, 64),
@@ -63,11 +64,10 @@ class SAC(object):
         batch_size=128,
         memory_cap=100000,
     ):
-        self.env = env
-        self.state_shape = env.observation_space.shape  # shape of observations
-        self.action_shape = env.action_space.shape  # number of actions
-        self.action_bound = (env.action_space.high - env.action_space.low) / 2
-        self.action_shift = (env.action_space.high + env.action_space.low) / 2
+        self.state_shape = observation_shape  # shape of observations
+        self.action_shape = action_space.shape  # number of actions
+        self.action_bound = (action_space.high - action_space.low) / 2
+        self.action_shift = (action_space.high + action_space.low) / 2
         self.memory = deque(maxlen=int(memory_cap))
 
         # Define and initialize actor network
