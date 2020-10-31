@@ -92,4 +92,4 @@ if __name__ == "__main__":
         return {"action": action.numpy().tolist()}
 
     # Launch/Run the Agent (http) service
-    app.run(host=args.host_ip, port=args.host_port)
+    app.run(host=args.host_ip, port=args.host_port, debug=True)
