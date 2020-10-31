@@ -49,7 +49,7 @@ if __name__ == "__main__":
     # Create an instance of the Soft Actor-Critic Agent
     agent = SAC(env.observation_space.shape, env.action_space)
     # Load trained Agent model/brain
-    model_version = "episode100"
+    model_version = args.model_version
     agent.load_actor(
         os.path.join(args.trained_models_dir, f"sac_actor_{model_version}.h5")
     )
