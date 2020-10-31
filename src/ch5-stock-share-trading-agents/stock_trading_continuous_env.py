@@ -72,7 +72,7 @@ class StockTradingContinuousEnv(gym.Env):
         self.current_step += 1
 
         reward = self.account_value - self.opening_account_balance  # Profit (loss)
-        done = self.account_value <= 0 or self.current_step >= len(
+        done = self.account_value <= 0 or self.current_step * self.horizon >= len(
             self.ohlcv_df.loc[:, "Open"].values
         )
 
