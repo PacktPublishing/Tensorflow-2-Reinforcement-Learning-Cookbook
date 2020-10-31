@@ -12,7 +12,7 @@ _AVAILABLE_ENVS = {
         "description": "Crypto Trading RL environment",
     },
     "StockTradingContinuousEnv-v0": {
-        "entry_point": "tradegym.stock_trading_continuous:StockTradingContinuousEnv",
+        "entry_point": "tradegym.stock_trading_continuous_env:StockTradingContinuousEnv",
         "description": "Stock Trading  RL environment with continous action space",
     },
 }
