@@ -6,6 +6,7 @@ from argparse import ArgumentParser
 
 import gym.spaces
 from flask import Flask, request
+import numpy as np
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from sac_agent_runtime import SAC
@@ -36,7 +37,9 @@ parser.add_argument(
     help="Runtime config parameters for the Agent. Default=runtime_config.json",
 )
 parser.add_argument(
-    "--obs-shape", default=(6, 31), help="Shape of observations. Default=(6, 31)"
+    "--observation-shape",
+    default=(6, 31),
+    help="Shape of observations. Default=(6, 31)",
 )
 parser.add_argument(
     "--action-space-low", default=[-1], help="Low value of action space. Default=[-1]"
@@ -62,11 +65,13 @@ if __name__ == "__main__":
     # Set Agent's runtime configs
     observation_shape = args.observation_shape
     action_space = gym.spaces.Box(
-        args.action_space_low, args.action_space_high, args.action_shape
+        np.array(args.action_space_low),
+        np.array(args.action_space_high),
+        args.action_shape,
     )
 
     # Create an instance of the Agent
-    agent = SAC()
+    agent = SAC(observation_shape, action_space)
     # Load trained Agent model/brain
     model_version = args.model_version
     agent.load_actor(
@@ -82,9 +87,9 @@ if __name__ == "__main__":
 
     @app.route("/v1/act", methods=["POST"])
     def get_action():
-        data = request.json
-        action = agent.act(data.get("observation"), test=True)
-        return action
+        data = request.get_json()
+        action = agent.act(np.array(data.get("observation")), test=True)
+        return {"action": action.numpy().tolist()}
 
     # Launch/Run the Agent (http) service
     app.run(host=args.host_ip, port=args.host_port)
