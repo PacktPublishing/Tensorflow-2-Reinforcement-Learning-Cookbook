@@ -18,7 +18,7 @@ parser = ArgumentParser(
 parser.add_argument("--agent", default="SAC", help="Name of Agent. Default=SAC")
 parser.add_argument(
     "--host-ip",
-    default="127.0.0.1",
+    default="0.0.0.0",
     help="IP Address of the host server where Agent service is run. Default=127.0.0.1",
 )
 parser.add_argument(
