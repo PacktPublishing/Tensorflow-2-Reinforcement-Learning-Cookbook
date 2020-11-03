@@ -26,4 +26,4 @@ RUN conda env create -f "tfrl-cookbook.yml" -n "tfrl-cookbook"
 
 ENTRYPOINT [ "conda", "run", "--no-capture-output", "-n", "tfrl-cookbook", "python" ]
 
-CMD [ "2_packaging_rl_agents_for_deployment.py" ]
+CMD [ "5_packaging_rl_agents_for_deployment.py" ]
