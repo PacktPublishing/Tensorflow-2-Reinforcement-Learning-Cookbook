@@ -3,11 +3,11 @@ FROM nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
 # Chapter 7: Deploying Deep RL Agents to the cloud
 LABEL maintainer="emailid@domain.tld"
 
+RUN apt-get install -y wget git make cmake zlib1g-dev && rm -rf /var/lib/apt/lists/*
+
 ENV PATH="/root/miniconda3/bin:${PATH}"
 ARG PATH="/root/miniconda3/bin:${PATH}"
 RUN apt-get update
-
-RUN apt-get install -y wget git make cmake zlib1g-dev && rm -rf /var/lib/apt/lists/*
 
 RUN wget \
     https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \

@@ -1,4 +1,4 @@
-" Simple test script for recipe 2: Packaging RL agents for cloud deployments" ""
+" Simple test script for the deployed Trading Bot-as-a-Service"
 
 import os
 import sys
