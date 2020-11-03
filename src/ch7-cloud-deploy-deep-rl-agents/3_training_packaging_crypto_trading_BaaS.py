@@ -12,7 +12,7 @@ from tradegym_http_client import Client
 from sac_agent_base import SAC
 
 # Create an App-level child logger
-logger = logging.getLogger("TFRL-cookbook-ch4-r3")
+logger = logging.getLogger("TFRL-cookbook-ch7-training-with-sim-server")
 # Set handler for this logger to handle messages
 logger.addHandler(logging.StreamHandler())
 # Set logging-level for this logger's handler
