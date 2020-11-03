@@ -45,10 +45,10 @@ if __name__ == "__main__":
     agent = SAC(observation_shape, action_space)
 
     # Configure training
-    max_epochs = 30
+    max_epochs = 30000
     random_epochs = 0.6 * max_epochs
-    max_steps = 200
-    save_freq = 50
+    max_steps = 100
+    save_freq = 500
     reward = 0
     done = False
 
