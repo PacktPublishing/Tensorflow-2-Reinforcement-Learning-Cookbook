@@ -28,7 +28,7 @@ def actor(state_shape, action_shape, units=(512, 256, 64)):
     actions_mean = Dense(action_shape[0], name="Out_mean")(x)
     actions_std = Dense(action_shape[0], name="Out_std")(x)
 
-    model = Model(inputs=state, outputs=[actions_mean, actions_std])
+    model = Model(inputs=state, outputs=[actions_mean, actions_std], name="Actor")
 
     return model
 
@@ -42,7 +42,7 @@ def critic(state_shape, action_shape, units=(512, 256, 64)):
         x = Dense(units[index], name="Hidden{}".format(index), activation="relu")(x)
 
     output = Dense(1, name="Out_QVal")(x)
-    model = Model(inputs=inputs, outputs=output)
+    model = Model(inputs=inputs, outputs=output, name="Critic")
 
     return model
 
