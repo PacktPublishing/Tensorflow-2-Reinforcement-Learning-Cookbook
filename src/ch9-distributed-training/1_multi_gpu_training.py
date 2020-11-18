@@ -1,9 +1,15 @@
 # Based on official TensorFlow docs/tutorial
-import tensorflow_datasets as tfds
+import sys
+
 import tensorflow as tf
-import resnet
+import tensorflow_datasets as tfds
+
+if "." not in sys.path:
+    sys.path.insert(0, ".")
 
 import os
+
+import resnet
 
 dataset_name = "dmlab"  # "cifar10" or "cifar100"; See tensrflow.org/datasets/catalog for complete list
 # NOTE: dmlab is large in size; Download bandwidth and GPU memory to be considered
