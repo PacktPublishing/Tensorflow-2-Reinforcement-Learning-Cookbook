@@ -30,4 +30,8 @@ for step in range(1000):
         checkpoint = trainer.save()
         print("checkpoint saved at", checkpoint)
 
+# Restore agent from a checkpoint and start a new training run with a different config
+# config["lr"] =  ray.tune.grid_search([0.01, 0.001])"]
+# ray.tune.run(trainer, config=config, restore=checkpoint)
+
 ray.shutdown()
