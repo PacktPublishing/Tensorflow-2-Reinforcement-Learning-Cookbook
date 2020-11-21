@@ -29,8 +29,9 @@ class ParameterServer(object):
 
     # save weights to disk
     def save_weights(self, name):
-        with open(name + "weights.pickle", "wb") as pkl:
+        with open(name + "weights.pkl", "wb") as pkl:
             pickle.dump(self.weights, pkl)
+        print(f"Weights saved to {name + 'weights.pkl'}.")
 
 
 @ray.remote
@@ -94,6 +95,7 @@ def rollout(ps, replay_buffer, config):
             a = env.action_space.sample()
 
         next_obs, reward, done, _ = env.step(a)
+        print(f"Step#:{step} reward:{reward} done:{done}")
         ep_ret += reward
         ep_len += 1
 
@@ -106,7 +108,7 @@ def rollout(ps, replay_buffer, config):
 
         if done or (ep_len == config["max_ep_len"]):
             """
-            Perform parameter updates at the end of the trajectory.
+            Perform parameter sync at the end of the trajectory.
             """
             obs, reward, done, ep_ret, ep_len = env.reset(), 0, False, 0, 0
             weights = ray.get(ps.pull.remote())
