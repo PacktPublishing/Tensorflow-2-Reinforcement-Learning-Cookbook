@@ -1,3 +1,10 @@
+""" This recipe walks you through the process of accelerating your model training using TF2.x's distributed
+training strategies and also guide you along the process to save and load your trained models for inference
+# Multi-GPU distributed training with TensorFlow 2.x and Keras
+The `tf.distribute.MirroredStrategy` copies all of the model's variables to each processor.
+Then, it uses [all-reduce](http://mpitutorial.com/tutorials/mpi-reduce-and-allreduce/) to
+combine the gradients from all processors and applies the combined value to all copies of the model.
+"""
 # Based on official TensorFlow docs/tutorial
 import sys
 
