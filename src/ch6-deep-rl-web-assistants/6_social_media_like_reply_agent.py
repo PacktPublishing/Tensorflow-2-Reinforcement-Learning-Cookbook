@@ -1,4 +1,5 @@
 import argparse
+import copy
 import os
 from datetime import datetime
 
@@ -51,7 +52,7 @@ class Actor:
         self.opt = tf.keras.optimizers.Nadam(args.actor_lr)
 
     def nn_model(self):
-        obs_input = Input(self.state_dim)
+        obs_input = Input(self.state_dim, name="im_obs")
         conv1 = Conv2D(
             filters=64,
             kernel_size=(3, 3),
@@ -102,8 +103,9 @@ class Actor:
             kernel_initializer=self.weight_initializer,
         )(dropout2)
         # Scale & clip x[i] to be in range [0, action_bound[i]]
+        action_bound = copy.deepcopy(self.action_bound)
         mu_output = Lambda(
-            lambda x: tf.clip_by_value(x * self.action_bound, 1e-9, self.action_bound)
+            lambda x: tf.clip_by_value(x * action_bound, 1e-9, action_bound), name="mu_output"
         )(output_val)
         std_output_1 = Dense(
             self.action_dim[0],
@@ -112,7 +114,8 @@ class Actor:
         )(dropout2)
         std_output = Lambda(
             lambda x: tf.clip_by_value(
-                x * self.action_bound, 1e-9, self.action_bound / 2
+                x * action_bound, 1e-9, action_bound / 2,
+                name="std_output"
             )
         )(std_output_1)
         return tf.keras.models.Model(
@@ -165,6 +168,11 @@ class Actor:
         grads = tape.gradient(loss, self.model.trainable_variables)
         self.opt.apply_gradients(zip(grads, self.model.trainable_variables))
         return loss
+    
+    def save(self, model_dir:str, version:int =1):
+        actor_model_save_dir = os.path.join(model_dir, "actor", str(version), "model.savedmodel")
+        self.model.save(actor_model_save_dir, save_format="tf")
+        print(f"Actor model saved at:{actor_model_save_dir}")
 
 
 class Critic:
@@ -238,6 +246,11 @@ class Critic:
         grads = tape.gradient(loss, self.model.trainable_variables)
         self.opt.apply_gradients(zip(grads, self.model.trainable_variables))
         return loss
+
+    def save(self, model_dir:str, version:int=1):
+        critic_model_save_dir = os.path.join(model_dir, "critic", str(version), "model.savedmodel")
+        self.model.save(critic_model_save_dir, save_format="tf")
+        print(f"Critic model saved at:{critic_model_save_dir}")
 
 
 class PPOAgent:
@@ -351,9 +364,19 @@ class PPOAgent:
                 print(f"Episode#{ep} Reward:{episode_reward} Actions:{action_batch}")
                 tf.summary.scalar("episode_reward", episode_reward, step=ep)
 
+    def save(self, model_dir:str, version:int=1):
+        self.actor.save(model_dir, version)
+        self.critic.save(model_dir, version)
+
 
 if __name__ == "__main__":
     env_name = "MiniWoBSocialMediaReplyVisualEnv-v0"
     env = gym.make(env_name)
     cta_agent = PPOAgent(env)
-    cta_agent.train()
+    cta_agent.train(max_episodes=10)
+    # Model saving
+    model_dir = "trained_models"
+    agent_name = "PPO-MiniWoBSocialMediaMuteUserVisualEnv-v0"
+    agent_version = 1
+    agent_model_path = os.path.join(model_dir, agent_name)
+    cta_agent.save(agent_model_path, agent_version)
