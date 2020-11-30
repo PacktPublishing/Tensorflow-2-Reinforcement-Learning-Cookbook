@@ -20,7 +20,7 @@ import webgym  # Used to register webgym environments
 
 tf.keras.backend.set_floatx("float64")
 
-parser = argparse.ArgumentParser(prog="TFRL-Cookbook-Ch5-SocialMedia-Like-Reply-Agent")
+parser = argparse.ArgumentParser(prog="TFRL-Cookbook-Ch6-SocialMedia-Like-Reply-Agent")
 parser.add_argument("--env", default="MiniWoBSocialMediaReplyVisualEnv-v0")
 parser.add_argument("--update-freq", type=int, default=16)
 parser.add_argument("--epochs", type=int, default=3)

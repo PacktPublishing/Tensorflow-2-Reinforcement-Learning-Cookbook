@@ -20,7 +20,7 @@ import webgym  # Used to register webgym environments
 tf.keras.backend.set_floatx("float64")
 
 parser = argparse.ArgumentParser(
-    prog="TFRL-Cookbook-Ch5-Important-Emails-Manager-Agent"
+    prog="TFRL-Cookbook-Ch6-Important-Emails-Manager-Agent"
 )
 parser.add_argument("--env", default="MiniWoBEmailInboxImportantVisualEnv-v0")
 parser.add_argument("--update-freq", type=int, default=16)
