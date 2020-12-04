@@ -227,13 +227,13 @@ function render() {
 
   drawNet();
 
-  colorRect(0, paddleLeftY, PADDLE_THICKNESS, PADDLE_HEIGHT, "white");
+  colorRect(0, paddleLeftY, PADDLE_THICKNESS, PADDLE_HEIGHT, "red");
   colorRect(
     canvas.width - PADDLE_THICKNESS,
     paddleRightY,
     PADDLE_THICKNESS,
     PADDLE_HEIGHT,
-    "white"
+    "blue"
   );
   colorCircle(ballX, ballY, 10, "orange");
   context.fillText(
