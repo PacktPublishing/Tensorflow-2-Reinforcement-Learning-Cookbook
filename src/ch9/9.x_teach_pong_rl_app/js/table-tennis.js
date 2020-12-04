@@ -19,7 +19,6 @@ function calculateMousePos(event) {
     root = document.documentElement;
   mouseX = event.clientX - rect.left - root.scrollLeft;
   mouseY = event.clientY - rect.top - root.scrollTop;
-  // console.log(e, rect, root);
   return {
     x: mouseX,
     y: mouseY,
@@ -236,7 +235,7 @@ function render() {
     PADDLE_HEIGHT,
     "white"
   );
-  colorCircle(ballX, ballY, 10, "white");
+  colorCircle(ballX, ballY, 10, "orange");
   context.fillText(
     player1Score,
     (canvas.width * 1) / 4,
