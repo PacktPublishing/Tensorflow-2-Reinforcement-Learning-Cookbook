@@ -68,17 +68,32 @@ function resizeTable() {
   gameArea.style.marginTop = -newHeight / 2 + "px";
   gameArea.style.marginLeft = -newWidth / 2 + "px";
 
-  var gameCanvas = document.getElementById("tableCanvas");
+  var gameCanvas = document.getElementById("ttPlayArea");
   gameCanvas.width = newWidth;
   gameCanvas.height = newHeight;
 }
 
 window.onload = function () {
-  canvas = document.getElementById("tableCanvas");
+  canvas = document.getElementById("ttPlayArea");
   context = canvas.getContext("2d");
 
   // Resize Table Canvas
   resizeTable();
+  // Draw TT Board
+  ttBoardCanvas = document.getElementById("ttBoard");
+  ttBoardContext = ttBoardCanvas.getContext("2d");
+  var ttBoard = new Image();
+  ttBoard.src = "rsc/tt-board.svg";
+
+  ttBoard.onload = function () {
+    ttBoardContext.drawImage(
+      ttBoard,
+      0,
+      0,
+      ttBoardCanvas.width,
+      ttBoardCanvas.height
+    );
+  };
 
   var framesPerSecond = 30;
 
@@ -184,8 +199,8 @@ function render() {
   context.font = "20px Arial";
   context.textAlign = "center";
   // Draw the Table
-  colorRect(0, 0, canvas.width, canvas.height, "black");
-
+  // colorRect(0, 0, canvas.width, canvas.height, "black");
+  context.clearRect(0, 0, canvas.width, canvas.height); // TODO: clear only modified region
   if (gameOver) {
     context.fillStyle = "white";
 
