@@ -14,11 +14,11 @@ var canvas,
   player2Score = 0,
   gameOver = false;
 
-function calculateMousePos(e) {
+function calculateMousePos(event) {
   var rect = canvas.getBoundingClientRect(),
     root = document.documentElement;
-  mouseX = e.clientX - rect.left - root.scrollLeft;
-  mouseY = e.clientY - rect.top - root.scrollTop;
+  mouseX = event.clientX - rect.left - root.scrollLeft;
+  mouseY = event.clientY - rect.top - root.scrollTop;
   // console.log(e, rect, root);
   return {
     x: mouseX,
@@ -26,12 +26,26 @@ function calculateMousePos(e) {
   };
 }
 
-function handleMouseClick(e) {
+function handleMouseClick(event) {
   if (gameOver) {
     player1Score = 0;
     player2Score = 0;
     gameOver = false;
   }
+}
+
+function handleMouseMove(event) {
+  var mousePos = calculateMousePos(event);
+  paddleLeftY = mousePos.y - PADDLE_HEIGHT / 2;
+}
+
+function handleTouchStart(event) {
+  handleMouseClick(event.touches[0]);
+}
+
+function handleTouchMove(event) {
+  handleMouseMove(event.touches[0]);
+  event.preventDefault();
 }
 
 function resizeTable() {
@@ -68,15 +82,17 @@ window.onload = function () {
 
   var framesPerSecond = 30;
   setInterval(function () {
-    moveEverything();
-    drawEverything();
+    step();
+    render();
   }, 1000 / framesPerSecond);
 
-  canvas.addEventListener("mousedown", handleMouseClick);
-  canvas.addEventListener("mousemove", function (e) {
-    var mousePos = calculateMousePos(e);
-    paddleLeftY = mousePos.y - PADDLE_HEIGHT / 2;
-  });
+  // Mouse calbacks for user interaction
+  canvas.addEventListener("mousedown", handleMouseClick, false);
+  canvas.addEventListener("mousemove", handleMouseMove, false);
+
+  // Touch callbacks for user interaction
+  canvas.addEventListener("touchstart", handleTouchStart, false);
+  canvas.addEventListener("touchmove", handleTouchMove, false);
 
   window.addEventListener("resize", resizeTable, false);
   window.addEventListener("orientationchange", resizeTable, false);
@@ -101,7 +117,7 @@ function computerMovement() {
   }
 }
 
-function moveEverything() {
+function step() {
   if (gameOver) {
     return;
   }
@@ -149,7 +165,7 @@ function drawNet() {
   }
 }
 
-function drawEverything() {
+function render() {
   // Draw the Table
   colorRect(0, 0, canvas.width, canvas.height, "black");
 
