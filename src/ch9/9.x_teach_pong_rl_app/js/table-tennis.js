@@ -1,4 +1,4 @@
-const WINNER_SCORE = 10;
+const WINNER_SCORE = 3;
 const PADDLE_HEIGHT = 100;
 const PADDLE_THICKNESS = 10;
 
@@ -81,6 +81,8 @@ window.onload = function () {
   resizeTable();
 
   var framesPerSecond = 30;
+
+  // Run env loop
   setInterval(function () {
     step();
     render();
@@ -108,21 +110,34 @@ function ballReset() {
   ballY = canvas.height / 2;
 }
 
-function computerMovement() {
-  var paddleRightYCenter = paddleRightY + PADDLE_HEIGHT / 2;
-  if (paddleRightYCenter < ballY + 35) {
-    paddleRightY += 6;
-  } else {
-    paddleRightY -= 6;
+class BaselineAgent {
+  constructor(paddleHeight) {
+    this.paddleHeight = paddleHeight;
+    this.action = 0;
+  }
+
+  act(state) {
+    var paddleRightYCenter = state.paddleRightY + this.paddleHeight / 2;
+    if (paddleRightYCenter < state.ballY + 0.3 * this.paddleHeight) {
+      this.action = +6;
+    } else {
+      this.action = -6;
+    }
+    return this.action;
   }
 }
+
+var baselineAgent = new BaselineAgent(PADDLE_HEIGHT);
 
 function step() {
   if (gameOver) {
     return;
   }
 
-  computerMovement();
+  // Get Agent's action
+  action = baselineAgent.act({ paddleRightY: paddleRightY, ballY: ballY });
+  // Apply Agent's action
+  paddleRightY += action;
   ballY += ballSpeedY;
   ballX += ballSpeedX;
 
@@ -166,6 +181,8 @@ function drawNet() {
 }
 
 function render() {
+  context.font = "20px Arial";
+  context.textAlign = "center";
   // Draw the Table
   colorRect(0, 0, canvas.width, canvas.height, "black");
 
@@ -205,8 +222,16 @@ function render() {
     "white"
   );
   colorCircle(ballX, ballY, 10, "white");
-  context.fillText(player1Score, 100, 100);
-  context.fillText(player2Score, canvas.width - 100, 100);
+  context.fillText(
+    player1Score,
+    (canvas.width * 1) / 4,
+    (canvas.height * 1) / 4
+  );
+  context.fillText(
+    player2Score,
+    (canvas.width * 3) / 4,
+    (canvas.height * 1) / 4
+  );
 }
 
 function colorCircle(centerX, centerY, radius, drawColor) {
