@@ -1,3 +1,7 @@
+#!/usr/bin/env/ python
+# Visual stock/share trading environment with indicators & real data
+# Chapter 5, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+
 import os
 import random
 from typing import Dict
@@ -55,7 +59,10 @@ class StockTradingVisualEnv(gym.Env):
         self.obs_width, self.obs_height = 128, 128
         self.horizon = env_config.get("observation_horizon_sequence_length")
         self.observation_space = spaces.Box(
-            low=0, high=255, shape=(128, 128, 3), dtype=np.uint8,
+            low=0,
+            high=255,
+            shape=(128, 128, 3),
+            dtype=np.uint8,
         )
         self.order_size = env_config.get("order_size")
         self.viz = None  # Visualizer

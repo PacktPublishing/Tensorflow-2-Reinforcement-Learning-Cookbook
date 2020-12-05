@@ -1,3 +1,7 @@
+#!/usr/bin/env/ python
+# Stock trading RL environment with real data from stock exchange
+# Chapter 5, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+
 import os
 import random
 from typing import Dict

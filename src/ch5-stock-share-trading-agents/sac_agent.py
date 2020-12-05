@@ -1,3 +1,7 @@
+#!/usr/bin/env/ python
+# Soft Actor-Critic (SAC) agent training scripta for stock market trading
+# Chapter 5, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+
 import datetime
 import functools
 import os

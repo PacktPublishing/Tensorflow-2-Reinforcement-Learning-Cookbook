@@ -1,3 +1,7 @@
+#!/usr/bin/env/ python
+# Stock/share trading RL environment with continuous-valued trade actions
+# Chapter 5, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+
 import os
 import random
 from typing import Dict

@@ -1,4 +1,6 @@
-import os
+#!/usr/bin/env/ python
+# Utility functions to visualize agent's trade executions
+# Chapter 5, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 
 import matplotlib
 import matplotlib.pyplot as plt
