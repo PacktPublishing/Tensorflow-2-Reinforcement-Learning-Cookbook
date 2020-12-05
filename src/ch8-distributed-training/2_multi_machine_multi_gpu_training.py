@@ -1,5 +1,7 @@
-import json
-import os
+#!/usr/bin/env/ python
+# Recipe to accelerate custom model training with multi-machine, multi-GPU training
+# Chapter 8, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+
 import sys
 
 import tensorflow as tf

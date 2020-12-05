@@ -1,3 +1,7 @@
+#!/usr/bin/env/ python
+# Custom deep RL agent models for training with Ray, RLLib, Tune
+# Chapter 8, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+
 from ray.rllib.models.tf.tf_modelv2 import TFModelV2
 import tensorflow as tf
 

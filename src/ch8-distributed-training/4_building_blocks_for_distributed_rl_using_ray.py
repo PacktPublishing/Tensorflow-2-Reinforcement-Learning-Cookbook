@@ -1,3 +1,7 @@
+#!/usr/bin/env/ python
+# Building-blocks for distributed deep RL agent training using Ray
+# Chapter 8, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+
 import pickle
 import sys
 

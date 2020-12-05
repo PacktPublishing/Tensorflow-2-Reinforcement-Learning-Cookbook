@@ -1,3 +1,7 @@
+#!/usr/bin/env/ python
+# Multi-GPU PPO agent training script
+# Chapter 8, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+
 import argparse
 import os
 from datetime import datetime
