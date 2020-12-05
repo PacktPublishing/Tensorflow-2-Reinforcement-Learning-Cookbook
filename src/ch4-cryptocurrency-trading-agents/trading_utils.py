@@ -1,6 +1,6 @@
 #!/usr/bin/env/ python
 # Utilities to visualize agent's trade execution and portfolio performance
-# Chapter N, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+# Chapter 4, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 
 import matplotlib
 import matplotlib.pyplot as plt
