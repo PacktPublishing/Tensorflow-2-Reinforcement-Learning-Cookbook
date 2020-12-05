@@ -157,7 +157,6 @@ function step() {
 
   if (ballX > canvas.width) {
     if (ballY > paddleRightY && ballY < paddleRightY + PADDLE_HEIGHT) {
-      console.log(paddleRightY);
       ballSpeedX = -ballSpeedX;
       var deltaY = ballY - (paddleRightY + PADDLE_HEIGHT / 2);
       ballSpeedY = deltaY * 0.35;
@@ -169,7 +168,6 @@ function step() {
 
   if (ballX < 0) {
     if (ballY > paddleLeftY && ballY < paddleLeftY + PADDLE_HEIGHT) {
-      console.log(paddleLeftY);
       ballSpeedX = -ballSpeedX;
       var deltaY = ballY - (paddleLeftY + PADDLE_HEIGHT / 2);
       ballSpeedY = deltaY * 0.35;
