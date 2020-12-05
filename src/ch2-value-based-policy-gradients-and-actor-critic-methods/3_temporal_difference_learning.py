@@ -1,3 +1,7 @@
+#!/usr/bin/env/ python
+# Temporal Difference (TD) learning
+# Chapter 2, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+
 import numpy as np
 from envs.gridworldv2 import GridworldV2Env
 from value_function_utils import visualize_grid_state_values
@@ -29,4 +33,3 @@ if __name__ == "__main__":
     max_episodes = 4000
     env = GridworldV2Env(step_cost=-0.1, max_ep_length=30)
     temporal_difference_learning(env, max_episodes)
-

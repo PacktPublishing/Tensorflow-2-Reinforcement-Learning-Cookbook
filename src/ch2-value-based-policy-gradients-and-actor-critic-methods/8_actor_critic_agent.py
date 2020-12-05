@@ -1,3 +1,7 @@
+#!/usr/bin/env/ python
+# Neural Actor-Critic algorithm and agent
+# Chapter N, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+
 import numpy as np
 import tensorflow as tf
 import gym

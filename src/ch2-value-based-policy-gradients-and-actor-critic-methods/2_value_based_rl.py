@@ -1,3 +1,7 @@
+#!/usr/bin/env/ python
+# Value-based reinforcement learning
+# Chapter 2, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+
 import numpy as np
 
 from envs.maze import MazeEnv

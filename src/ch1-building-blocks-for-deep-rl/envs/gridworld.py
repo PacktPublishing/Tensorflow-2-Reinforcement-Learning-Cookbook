@@ -1,3 +1,6 @@
+#!/usr/bin/env/ python
+# GridWorld RL environment with image observations
+# Chapter 1, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 import copy
 import sys
 
@@ -134,7 +137,10 @@ class GridworldEnv(gym.Env):
 
     def reset(self):
         self.grid_state = copy.deepcopy(self.initial_grid_state)
-        (self.agent_state, self.agent_goal_state,) = self.get_state()
+        (
+            self.agent_state,
+            self.agent_goal_state,
+        ) = self.get_state()
         self.step_num = 0
         self.done = False
         self.info["status"] = "Live"

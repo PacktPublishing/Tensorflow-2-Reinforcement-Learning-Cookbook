@@ -1,3 +1,7 @@
+#!/usr/bin/env/ python
+# Maze RL environment with image observations
+# Chapter 2, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+
 from typing import List
 
 import gym

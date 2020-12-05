@@ -1,3 +1,7 @@
+#!/usr/bin/env/ python
+# Utility functions to visualize value functions
+# Chapter 2, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns

@@ -1,3 +1,7 @@
+#!/usr/bin/env/ python
+# Q-learning algorithm and agent
+# Chapter 2, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+
 import numpy as np
 import random
 from value_function_utils import visualize_grid_action_values

@@ -1,3 +1,7 @@
+#!/usr/bin/env/ python
+# Policy gradient algorithm and agent with neural network policy
+# Chapter 2, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+
 import tensorflow as tf
 import tensorflow_probability as tfp
 from tensorflow import keras

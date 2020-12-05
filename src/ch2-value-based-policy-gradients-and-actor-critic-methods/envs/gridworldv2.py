@@ -1,5 +1,8 @@
+#!/usr/bin/env/ python
+# GridWorld RL environment with image observations
+# Chapter 2, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+
 import gym
-import matplotlib.pyplot as plt
 import numpy as np
 
 
