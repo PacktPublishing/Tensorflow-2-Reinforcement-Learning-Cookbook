@@ -1,3 +1,7 @@
+#!/usr/bin/env/ python
+# Deep Recurrent Q-Network (DRQN) agent training script
+# Chapter 3, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+
 import tensorflow as tf
 from datetime import datetime
 import os
@@ -152,4 +156,3 @@ if __name__ == "__main__":
     env = gym.make("CartPole-v0")
     agent = Agent(env)
     agent.train(max_episodes=2000)
-

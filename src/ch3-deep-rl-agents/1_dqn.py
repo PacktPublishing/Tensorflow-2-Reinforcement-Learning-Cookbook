@@ -1,3 +1,7 @@
+#!/usr/bin/env/ python
+# Deep Q Network (DQN) agent training script
+# Chapter 3, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+
 import argparse
 from datetime import datetime
 import os
@@ -135,4 +139,3 @@ if __name__ == "__main__":
     env = gym.make("CartPole-v0")
     agent = Agent(env)
     agent.train(max_episodes=2000)
-

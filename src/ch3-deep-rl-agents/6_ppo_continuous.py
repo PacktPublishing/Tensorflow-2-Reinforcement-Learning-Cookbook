@@ -1,3 +1,7 @@
+#!/usr/bin/env/ python
+# Proximal Policy Optimizatin (PPO) agent training script
+# Chapter 3, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+
 import argparse
 import os
 from datetime import datetime
