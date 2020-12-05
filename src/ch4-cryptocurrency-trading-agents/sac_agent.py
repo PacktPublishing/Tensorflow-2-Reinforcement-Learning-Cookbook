@@ -1,3 +1,7 @@
+#!/usr/bin/env/ python
+# Soft Actor-Critic (SAC) agent training script
+# Chapter N, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+
 import datetime
 import functools
 import os

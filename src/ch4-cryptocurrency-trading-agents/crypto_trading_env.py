@@ -1,3 +1,7 @@
+#!/usr/bin/env/ python
+# Crypto currency trading RL environment based on real data from crypto exchange
+# Chapter 4, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+
 import os
 import random
 from typing import Dict
