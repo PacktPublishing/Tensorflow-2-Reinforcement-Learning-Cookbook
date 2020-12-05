@@ -1,3 +1,7 @@
+#!/usr/bin/env/ python
+# Agent training script for automatically logging into websites
+# Chapter 6, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+
 import argparse
 import os
 from datetime import datetime

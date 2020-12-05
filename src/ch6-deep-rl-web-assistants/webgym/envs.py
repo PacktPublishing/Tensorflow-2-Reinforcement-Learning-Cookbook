@@ -1,3 +1,7 @@
+#!/usr/bin/env/ python
+# Visual WebGym RL envs based on miniwob++ for agents learning to interact with the WWW
+# Chapter 6, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+
 import gym.spaces
 import numpy as np
 import string

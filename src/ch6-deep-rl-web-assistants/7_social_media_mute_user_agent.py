@@ -1,3 +1,7 @@
+#!/usr/bin/env/ python
+# Train DDPG agents to manage unwanted posts on web pages
+# Chapter 6, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+
 import argparse
 import os
 import random

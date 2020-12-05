@@ -1,3 +1,7 @@
+#!/usr/bin/env/ python
+# Train PPO agents to manage unwanted posts on web pages
+# Chapter 6, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+
 import argparse
 import copy
 import os
@@ -105,7 +109,8 @@ class Actor:
         # Scale & clip x[i] to be in range [0, action_bound[i]]
         action_bound = copy.deepcopy(self.action_bound)
         mu_output = Lambda(
-            lambda x: tf.clip_by_value(x * action_bound, 1e-9, action_bound), name="mu_output"
+            lambda x: tf.clip_by_value(x * action_bound, 1e-9, action_bound),
+            name="mu_output",
         )(output_val)
         std_output_1 = Dense(
             self.action_dim[0],
@@ -114,8 +119,7 @@ class Actor:
         )(dropout2)
         std_output = Lambda(
             lambda x: tf.clip_by_value(
-                x * action_bound, 1e-9, action_bound / 2,
-                name="std_output"
+                x * action_bound, 1e-9, action_bound / 2, name="std_output"
             )
         )(std_output_1)
         return tf.keras.models.Model(
@@ -168,9 +172,11 @@ class Actor:
         grads = tape.gradient(loss, self.model.trainable_variables)
         self.opt.apply_gradients(zip(grads, self.model.trainable_variables))
         return loss
-    
-    def save(self, model_dir:str, version:int =1):
-        actor_model_save_dir = os.path.join(model_dir, "actor", str(version), "model.savedmodel")
+
+    def save(self, model_dir: str, version: int = 1):
+        actor_model_save_dir = os.path.join(
+            model_dir, "actor", str(version), "model.savedmodel"
+        )
         self.model.save(actor_model_save_dir, save_format="tf")
         print(f"Actor model saved at:{actor_model_save_dir}")
 
@@ -247,8 +253,10 @@ class Critic:
         self.opt.apply_gradients(zip(grads, self.model.trainable_variables))
         return loss
 
-    def save(self, model_dir:str, version:int=1):
-        critic_model_save_dir = os.path.join(model_dir, "critic", str(version), "model.savedmodel")
+    def save(self, model_dir: str, version: int = 1):
+        critic_model_save_dir = os.path.join(
+            model_dir, "critic", str(version), "model.savedmodel"
+        )
         self.model.save(critic_model_save_dir, save_format="tf")
         print(f"Critic model saved at:{critic_model_save_dir}")
 
@@ -364,7 +372,7 @@ class PPOAgent:
                 print(f"Episode#{ep} Reward:{episode_reward} Actions:{action_batch}")
                 tf.summary.scalar("episode_reward", episode_reward, step=ep)
 
-    def save(self, model_dir:str, version:int=1):
+    def save(self, model_dir: str, version: int = 1):
         self.actor.save(model_dir, version)
         self.critic.save(model_dir, version)
 
