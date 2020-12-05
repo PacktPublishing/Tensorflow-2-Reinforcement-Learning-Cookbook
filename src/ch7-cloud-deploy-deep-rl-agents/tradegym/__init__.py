@@ -1,3 +1,7 @@
+#!/usr/bin/env/ python
+# TradeGym env registration script
+# Chapter 7, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+
 import sys
 import os
 

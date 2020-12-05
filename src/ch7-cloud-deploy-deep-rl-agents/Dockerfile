@@ -1,6 +1,6 @@
 FROM nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
-# TensorFlow2.x Reinforcement Learning Cookbook
-# Chapter 7: Deploying Deep RL Agents to the cloud
+# Deploying Deep RL Agents to the cloud
+# Chapter 7, TensorFlow2.x Reinforcement Learning Cookbook | Praveen Palanisamy
 LABEL maintainer="emailid@domain.tld"
 
 RUN apt-get install -y wget git make cmake zlib1g-dev && rm -rf /var/lib/apt/lists/*

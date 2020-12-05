@@ -1,3 +1,7 @@
+#!/usr/bin/env/ python
+# WebGym Visual MiniWoB environment registration script
+# Chapter 6, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+
 import sys
 import os
 

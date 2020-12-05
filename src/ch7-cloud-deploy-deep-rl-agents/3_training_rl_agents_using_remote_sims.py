@@ -1,3 +1,7 @@
+#!/usr/bin/env/ python
+# Training Deep RL agents using remote simulators
+# Chapter 7, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+
 import datetime
 import os
 import sys

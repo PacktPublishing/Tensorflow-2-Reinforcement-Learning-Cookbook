@@ -1,4 +1,7 @@
-#!/bin/env/python
+#!/usr/bin/env/ python
+# Evaluating deep RL agents
+# Chapter 7, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+
 import os
 import sys
 
