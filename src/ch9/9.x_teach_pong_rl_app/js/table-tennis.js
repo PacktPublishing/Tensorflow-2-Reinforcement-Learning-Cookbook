@@ -8,11 +8,11 @@ var canvas,
   ballSpeedX = 15,
   ballY = 10,
   ballSpeedY = 4,
-  paddleLeftY = 250,
-  paddleRightY = 250,
+  paddleRedY = 250,
+  paddleBlueY = 250,
   player1Score = 0,
   player2Score = 0,
-  gameOver = false;
+  done = false;
 
 function calculateMousePos(event) {
   var rect = canvas.getBoundingClientRect(),
@@ -26,16 +26,16 @@ function calculateMousePos(event) {
 }
 
 function handleMouseClick(event) {
-  if (gameOver) {
+  if (done) {
     player1Score = 0;
     player2Score = 0;
-    gameOver = false;
+    done = false;
   }
 }
 
 function handleMouseMove(event) {
   var mousePos = calculateMousePos(event);
-  paddleLeftY = mousePos.y - PADDLE_HEIGHT / 2;
+  paddleRedY = mousePos.y - PADDLE_HEIGHT / 2;
 }
 
 function handleTouchStart(event) {
@@ -95,10 +95,12 @@ window.onload = function () {
   };
 
   var framesPerSecond = 30;
-
+  var baselineAgent = new BaselineAgent(PADDLE_HEIGHT);
   // Run env loop
   setInterval(function () {
-    step();
+    // Get Agent's action
+    action = baselineAgent.act({ paddleBlueY: paddleBlueY, ballY: ballY });
+    step(action);
     render();
   }, 1000 / framesPerSecond);
 
@@ -116,7 +118,7 @@ window.onload = function () {
 
 function ballReset() {
   if (player1Score >= WINNER_SCORE || player2Score >= WINNER_SCORE) {
-    gameOver = true;
+    done = true;
   }
 
   ballSpeedX = -ballSpeedX;
@@ -131,8 +133,8 @@ class BaselineAgent {
   }
 
   act(state) {
-    var paddleRightYCenter = state.paddleRightY + this.paddleHeight / 2;
-    if (paddleRightYCenter < state.ballY + 0.3 * this.paddleHeight) {
+    var paddleBlueYCenter = state.paddleBlueY + this.paddleHeight / 2;
+    if (paddleBlueYCenter < state.ballY + 0.3 * this.paddleHeight) {
       this.action = +6;
     } else {
       this.action = -6;
@@ -141,24 +143,20 @@ class BaselineAgent {
   }
 }
 
-var baselineAgent = new BaselineAgent(PADDLE_HEIGHT);
-
-function step() {
-  if (gameOver) {
+function step(action) {
+  if (done) {
     return;
   }
 
-  // Get Agent's action
-  action = baselineAgent.act({ paddleRightY: paddleRightY, ballY: ballY });
   // Apply Agent's action
-  paddleRightY += action;
+  paddleBlueY += action;
   ballY += ballSpeedY;
   ballX += ballSpeedX;
 
   if (ballX > canvas.width) {
-    if (ballY > paddleRightY && ballY < paddleRightY + PADDLE_HEIGHT) {
+    if (ballY > paddleBlueY && ballY < paddleBlueY + PADDLE_HEIGHT) {
       ballSpeedX = -ballSpeedX;
-      var deltaY = ballY - (paddleRightY + PADDLE_HEIGHT / 2);
+      var deltaY = ballY - (paddleBlueY + PADDLE_HEIGHT / 2);
       ballSpeedY = deltaY * 0.35;
     } else {
       player1Score++;
@@ -167,9 +165,9 @@ function step() {
   }
 
   if (ballX < 0) {
-    if (ballY > paddleLeftY && ballY < paddleLeftY + PADDLE_HEIGHT) {
+    if (ballY > paddleRedY && ballY < paddleRedY + PADDLE_HEIGHT) {
       ballSpeedX = -ballSpeedX;
-      var deltaY = ballY - (paddleLeftY + PADDLE_HEIGHT / 2);
+      var deltaY = ballY - (paddleRedY + PADDLE_HEIGHT / 2);
       ballSpeedY = deltaY * 0.35;
     } else {
       player2Score++;
@@ -198,7 +196,7 @@ function render() {
   // Draw the Table
   // colorRect(0, 0, canvas.width, canvas.height, "black");
   context.clearRect(0, 0, canvas.width, canvas.height); // TODO: clear only modified region
-  if (gameOver) {
+  if (done) {
     context.fillStyle = "white";
 
     if (player1Score >= WINNER_SCORE) {
@@ -225,10 +223,10 @@ function render() {
 
   drawNet();
 
-  colorRect(0, paddleLeftY, PADDLE_THICKNESS, PADDLE_HEIGHT, "red");
+  colorRect(0, paddleRedY, PADDLE_THICKNESS, PADDLE_HEIGHT, "red");
   colorRect(
     canvas.width - PADDLE_THICKNESS,
-    paddleRightY,
+    paddleBlueY,
     PADDLE_THICKNESS,
     PADDLE_HEIGHT,
     "blue"
