@@ -378,13 +378,13 @@ class PPOAgent:
 
 
 if __name__ == "__main__":
-    env_name = "MiniWoBSocialMediaReplyVisualEnv-v0"
+    env_name = args.env
     env = gym.make(env_name)
     cta_agent = PPOAgent(env)
     cta_agent.train(max_episodes=10)
     # Model saving
     model_dir = "trained_models"
-    agent_name = "PPO-MiniWoBSocialMediaMuteUserVisualEnv-v0"
+    agent_name = f"PPO_{env_name}-v0"
     agent_version = 1
     agent_model_path = os.path.join(model_dir, agent_name)
     cta_agent.save(agent_model_path, agent_version)

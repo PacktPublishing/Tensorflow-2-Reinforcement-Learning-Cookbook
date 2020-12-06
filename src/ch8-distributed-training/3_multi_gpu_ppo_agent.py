@@ -1,5 +1,5 @@
 #!/usr/bin/env/ python
-# Multi-GPU PPO agent training script
+# Multi-GPU PPO agent training script; Image observations, discrete actions
 # Chapter 8, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 
 import argparse
