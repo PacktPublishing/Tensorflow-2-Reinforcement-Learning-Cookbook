@@ -1,30 +1,52 @@
 #!/usr/bin/env/ python
-# Multi-GPU PPO agent training script; Image observations, discrete actions
-# Chapter 8, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+# Train & export PPO agent for building apps with TensorFlow.js
+# Chapter 9, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 
 import argparse
+import copy
 import os
 from datetime import datetime
 
 import gym
-import gym.wrappers
 import numpy as np
+import procgen  # Used to register procgen envs with Gym registry
 import tensorflow as tf
+import tensorflowjs as tfjs
 from tensorflow.keras.layers import (
     Conv2D,
     Dense,
     Dropout,
     Flatten,
     Input,
+    Lambda,
     MaxPool2D,
 )
 
-import procgen  # Import & register procgen Gym envs
-
 tf.keras.backend.set_floatx("float64")
 
-parser = argparse.ArgumentParser(prog="TFRL-Cookbook-Ch9-Distributed-RL-Agent")
-parser.add_argument("--env", default="procgen:procgen-coinrun-v0")
+parser = argparse.ArgumentParser(prog="TFRL-Cookbook-Ch6-SocialMedia-Mute-User-Agent")
+parser.add_argument(
+    "--env",
+    default="procgen:procgen-coinrun-v0",
+    choices=[
+        "procgen:procgen-bigfish",
+        "procgen:procgen-bossfight",
+        "procgen:procgen-caveflyer",
+        "procgen:procgen-chaser",
+        "procgen:procgen-climber",
+        "procgen:procgen-coinrun",
+        "procgen:procgen-dodgeball",
+        "procgen:procgen-fruitbot",
+        "procgen:procgen-heist",
+        "procgen:procgen-jumper",
+        "procgen:procgen-leaper",
+        "procgen:procgen-maze",
+        "procgen:procgen-miner",
+        "procgen:procgen-ninja",
+        "procgen:procgen-plunder",
+        "procgen:procgen-starpilot",
+    ],
+)
 parser.add_argument("--update-freq", type=int, default=16)
 parser.add_argument("--epochs", type=int, default=3)
 parser.add_argument("--actor-lr", type=float, default=1e-4)
@@ -43,18 +65,17 @@ writer = tf.summary.create_file_writer(logdir)
 
 
 class Actor:
-    def __init__(self, state_dim, action_dim, execution_strategy):
+    def __init__(self, state_dim, action_dim):
         self.state_dim = state_dim
         self.action_dim = action_dim
-        self.execution_strategy = execution_strategy
-        with self.execution_strategy.scope():
-            self.weight_initializer = tf.keras.initializers.he_normal()
-            self.model = self.nn_model()
-            self.model.summary()  # Print a summary of the Actor model
-            self.opt = tf.keras.optimizers.Nadam(args.actor_lr)
+        self.weight_initializer = tf.keras.initializers.he_normal()
+        self.eps = 1e-5
+        self.model = self.nn_model()
+        self.model.summary()  # Print a summary of the Actor model
+        self.opt = tf.keras.optimizers.Nadam(args.actor_lr)
 
     def nn_model(self):
-        obs_input = Input(self.state_dim)
+        obs_input = Input(self.state_dim, name="im_obs")
         conv1 = Conv2D(
             filters=64,
             kernel_size=(3, 3),
@@ -116,6 +137,8 @@ class Actor:
             state_np = np.expand_dims(state_np, 0)
         logits = self.model.predict(state_np)  # shape: (batch_size, self.action_dim)
         action = np.random.choice(self.action_dim, p=logits[0])
+        # Clip action to be between 0 and max obs screen size
+        action = np.clip(action, 0, self.action_bound)
         # 1 Action per instance of env; Env expects: (num_instances, actions)
         # action = (action,)
         return logits, action
@@ -147,25 +170,29 @@ class Actor:
         self.opt.apply_gradients(zip(grads, self.model.trainable_variables))
         return loss
 
-    @tf.function
-    def train_distributed(self, old_policy, states, actions, gaes):
-        per_replica_losses = self.execution_strategy.run(
-            self.train, args=(old_policy, states, actions, gaes)
+    def save(self, model_dir: str, version: int = 1):
+        actor_model_save_dir = os.path.join(
+            model_dir, "actor", str(version), "model.savedmodel"
         )
-        return self.execution_strategy.reduce(
-            tf.distribute.ReduceOp.SUM, per_replica_losses, axis=None
+        self.model.save(actor_model_save_dir, save_format="tf")
+        print(f"Actor model saved at:{actor_model_save_dir}")
+
+    def save_tfjs(self, model_dir: str, version: int = 1):
+        """Save/Export Actor model in TensorFlow.js supported format"""
+        actor_model_save_dir = os.path.join(
+            model_dir, "actor", str(version), "model.tfjs"
         )
+        tfjs.converters.save_keras_model(self.model, actor_model_save_dir)
+        print(f"Actor model saved in TF.js format at:{actor_model_save_dir}")
 
 
 class Critic:
-    def __init__(self, state_dim, execution_strategy):
+    def __init__(self, state_dim):
         self.state_dim = state_dim
-        self.execution_strategy = execution_strategy
-        with self.execution_strategy.scope():
-            self.weight_initializer = tf.keras.initializers.he_normal()
-            self.model = self.nn_model()
-            self.model.summary()  # Print a summary of the Critic model
-            self.opt = tf.keras.optimizers.Nadam(args.critic_lr)
+        self.weight_initializer = tf.keras.initializers.he_normal()
+        self.model = self.nn_model()
+        self.model.summary()  # Print a summary of the Critic model
+        self.opt = tf.keras.optimizers.Nadam(args.critic_lr)
 
     def nn_model(self):
         obs_input = Input(self.state_dim)
@@ -219,7 +246,7 @@ class Critic:
         return tf.keras.models.Model(inputs=obs_input, outputs=value, name="Critic")
 
     def compute_loss(self, v_pred, td_targets):
-        mse = tf.keras.losses.MeanSquaredError(reduction=tf.keras.losses.Reduction.SUM)
+        mse = tf.keras.losses.MeanSquaredError()
         return mse(td_targets, v_pred)
 
     def train(self, states, td_targets):
@@ -231,37 +258,29 @@ class Critic:
         self.opt.apply_gradients(zip(grads, self.model.trainable_variables))
         return loss
 
-    @tf.function
-    def train_distributed(self, states, td_targets):
-        per_replica_losses = self.execution_strategy.run(
-            self.train, args=(states, td_targets)
+    def save(self, model_dir: str, version: int = 1):
+        critic_model_save_dir = os.path.join(
+            model_dir, "critic", str(version), "model.savedmodel"
         )
-        return self.execution_strategy.reduce(
-            tf.distribute.ReduceOp.SUM, per_replica_losses, axis=None
+        self.model.save(critic_model_save_dir, save_format="tf")
+        print(f"Critic model saved at:{critic_model_save_dir}")
+
+    def save_tfjs(self, model_dir: str, version: int = 1):
+        """Save/Export Critic model in TensorFlow.js supported format"""
+        critic_model_save_dir = os.path.join(
+            model_dir, "critic", str(version), "model.tfjs"
         )
+        tfjs.converters.save_keras_model(self.model, critic_model_save_dir)
+        print(f"Critic model saved TF.js format at:{critic_model_save_dir}")
 
 
 class PPOAgent:
     def __init__(self, env):
-        """Distributed PPO Agent for image observations and discrete action-space Gym envs
-
-        Args:
-            env (gym.Env): OpenAI Gym I/O compatible RL environment with discrete action space
-        """
         self.env = env
         self.state_dim = self.env.observation_space.shape
         self.action_dim = self.env.action_space.n
-        # Create a Distributed execution strategy
-        self.distributed_execution_strategy = tf.distribute.MirroredStrategy()
-        print(
-            f"Number of devices: {self.distributed_execution_strategy.num_replicas_in_sync}"
-        )
-        # Create Actor & Critic networks under the distributed execution strategy scope
-        with self.distributed_execution_strategy.scope():
-            self.actor = Actor(
-                self.state_dim, self.action_dim, tf.distribute.get_strategy()
-            )
-            self.critic = Critic(self.state_dim, tf.distribute.get_strategy())
+        self.actor = Actor(self.state_dim, self.action_dim)
+        self.critic = Critic(self.state_dim)
 
     def gae_target(self, rewards, v_values, next_v_value, done):
         n_step_targets = np.zeros_like(rewards)
@@ -281,94 +300,103 @@ class PPOAgent:
         return gae, n_step_targets
 
     def train(self, max_episodes=1000):
+        with writer.as_default():
+            for ep in range(max_episodes):
+                state_batch = []
+                action_batch = []
+                reward_batch = []
+                old_policy_batch = []
 
-        with self.distributed_execution_strategy.scope():
-            with writer.as_default():
-                for ep in range(max_episodes):
-                    state_batch = []
-                    action_batch = []
-                    reward_batch = []
-                    old_policy_batch = []
+                episode_reward, done = 0, False
 
-                    episode_reward, done = 0, False
+                state = self.env.reset()
+                prev_state = state
+                step_num = 0
 
-                    state = self.env.reset()
-                    prev_state = state
-                    step_num = 0
+                while not done:
+                    # self.env.render()
+                    log_old_policy, action = self.actor.get_action(state)
 
-                    while not done:
-                        self.env.render()
-                        logits, action = self.actor.get_action(state)
+                    next_state, reward, dones, _ = self.env.step(action)
+                    step_num += 1
+                    print(
+                        f"ep#:{ep} step#:{step_num} step_rew:{reward} action:{action} dones:{dones}"
+                    )
+                    done = np.all(dones)
+                    if done:
+                        next_state = prev_state
+                    else:
+                        prev_state = next_state
+                    state = np.array([np.array(s) for s in state])
+                    next_state = np.array([np.array(s) for s in next_state])
+                    reward = np.reshape(reward, [1, 1])
+                    log_old_policy = np.reshape(log_old_policy, [1, 1])
 
-                        next_state, reward, dones, _ = self.env.step(action)
-                        step_num += 1
+                    state_batch.append(state)
+                    action_batch.append(action)
+                    reward_batch.append((reward + 8) / 8)
+                    old_policy_batch.append(log_old_policy)
 
-                        print(
-                            f"ep#:{ep} step#:{step_num} step_rew:{reward} action:{action} dones:{dones}",
-                            end="\r",
+                    if len(state_batch) >= args.update_freq or done:
+                        states = np.array([state.squeeze() for state in state_batch])
+                        # Convert ([x, y],) to [x, y]
+                        actions = np.array([action[0] for action in action_batch])
+                        rewards = np.array(
+                            [reward.squeeze() for reward in reward_batch]
                         )
-                        done = np.all(dones)
-                        if done:
-                            next_state = prev_state
-                        else:
-                            prev_state = next_state
+                        old_policies = np.array(
+                            [old_pi.squeeze() for old_pi in old_policy_batch]
+                        )
 
-                        state_batch.append(state)
-                        action_batch.append(action)
-                        reward_batch.append((reward + 8) / 8)
-                        old_policy_batch.append(logits)
+                        v_values = self.critic.model.predict(states)
+                        next_v_value = self.critic.model.predict(next_state)
 
-                        if len(state_batch) >= args.update_freq or done:
-                            states = np.array(
-                                [state.squeeze() for state in state_batch]
+                        gaes, td_targets = self.gae_target(
+                            rewards, v_values, next_v_value, done
+                        )
+                        actor_losses, critic_losses = [], []
+                        for epoch in range(args.epochs):
+                            actor_loss = self.actor.train(
+                                old_policies, states, actions, gaes
                             )
-                            actions = np.array(action_batch)
-                            rewards = np.array(reward_batch)
-                            old_policies = np.array(
-                                [old_pi.squeeze() for old_pi in old_policy_batch]
-                            )
+                            actor_losses.append(actor_loss)
+                            critic_loss = self.critic.train(states, td_targets)
+                            critic_losses.append(critic_loss)
+                        # Plot mean actor & critic losses on every update
+                        tf.summary.scalar("actor_loss", np.mean(actor_losses), step=ep)
+                        tf.summary.scalar(
+                            "critic_loss", np.mean(critic_losses), step=ep
+                        )
 
-                            v_values = self.critic.model.predict(states)
-                            next_v_value = self.critic.model.predict(
-                                np.expand_dims(next_state, 0)
-                            )
+                        state_batch = []
+                        action_batch = []
+                        reward_batch = []
+                        old_policy_batch = []
 
-                            gaes, td_targets = self.gae_target(
-                                rewards, v_values, next_v_value, done
-                            )
-                            actor_losses, critic_losses = [], []
-                            for epoch in range(args.epochs):
-                                actor_loss = self.actor.train_distributed(
-                                    old_policies, states, actions, gaes
-                                )
-                                actor_losses.append(actor_loss)
-                                critic_loss = self.critic.train_distributed(
-                                    states, td_targets
-                                )
-                                critic_losses.append(critic_loss)
-                            # Plot mean actor & critic losses on every update
-                            tf.summary.scalar(
-                                "actor_loss", np.mean(actor_losses), step=ep
-                            )
-                            tf.summary.scalar(
-                                "critic_loss", np.mean(critic_losses), step=ep
-                            )
+                    episode_reward += reward[0][0]
+                    state = next_state[0]
 
-                            state_batch = []
-                            action_batch = []
-                            reward_batch = []
-                            old_policy_batch = []
+                print(f"Episode#{ep} Reward:{episode_reward} Actions:{action_batch}")
+                tf.summary.scalar("episode_reward", episode_reward, step=ep)
 
-                        episode_reward += reward
-                        state = next_state
+    def save(self, model_dir: str, version: int = 1):
+        self.actor.save(model_dir, version)
+        self.critic.save(model_dir, version)
 
-                    print(f"\n Episode#{ep} Reward:{episode_reward}")
-                    tf.summary.scalar("episode_reward", episode_reward, step=ep)
+    def save_tfjs(self, model_dir: str, version: int = 1):
+        print(f"Saving Agent model to:{model_dir}\n")
+        self.actor.save_tfjs(model_dir, version)
+        self.critic.save_tfjs(model_dir, version)
 
 
 if __name__ == "__main__":
     env_name = args.env
-    env = gym.make(env_name, render_mode="rgb_array")
-    env = gym.wrappers.Monitor(env=env, directory="./videos", force=True)
+    env = gym.make(env_name)
     agent = PPOAgent(env)
-    agent.train()
+    agent.train(max_episodes=1)
+    # Model saving
+    model_dir = "trained_models"
+    agent_name = f"PPO_{env_name}"
+    agent_version = 1
+    agent_model_path = os.path.join(model_dir, agent_name)
+    agent.save_tfjs(agent_model_path, agent_version)
