@@ -20,7 +20,7 @@ from tensorflow.keras.layers import (
     MaxPool2D,
 )
 
-tf.keras.backend.set_floatx("float64")
+tf.keras.backend.set_floatx("float32")
 
 parser = argparse.ArgumentParser(prog="TFRL-Cookbook-Ch9-PPO-trainer-exporter-TFLite")
 parser.add_argument(
@@ -161,7 +161,7 @@ class Actor:
     def train(self, old_policy, states, actions, gaes):
         actions = tf.one_hot(actions, self.action_dim)  # One-hot encoding
         actions = tf.reshape(actions, [-1, self.action_dim])  # Add batch dimension
-        actions = tf.cast(actions, tf.float64)
+        actions = tf.cast(actions, tf.float32)
         with tf.GradientTape() as tape:
             logits = self.model(states, training=True)
             loss = self.compute_loss(old_policy, logits, actions, gaes)
@@ -347,8 +347,8 @@ class PPOAgent:
 
                     if len(state_batch) >= args.update_freq or done:
                         states = np.array([state.squeeze() for state in state_batch])
-                        actions = np.array(action_batch)
-                        rewards = np.array(reward_batch)
+                        actions = np.array(action_batch).astype("float32")
+                        rewards = np.array(reward_batch).astype("float32")
                         old_policies = np.array(
                             [old_pi.squeeze() for old_pi in old_policy_batch]
                         )
