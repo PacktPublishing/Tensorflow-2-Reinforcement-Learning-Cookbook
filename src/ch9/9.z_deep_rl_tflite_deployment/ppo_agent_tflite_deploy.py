@@ -4,21 +4,15 @@
 
 import argparse
 import os
+import sys
 from datetime import datetime
 
 import gym
 import numpy as np
 import procgen  # Used to register procgen envs with Gym registry
 import tensorflow as tf
+from tensorflow.keras.layers import Conv2D, Dense, Dropout, Flatten, Input, MaxPool2D
 from tensorflow.python.autograph.core import converter
-from tensorflow.keras.layers import (
-    Conv2D,
-    Dense,
-    Dropout,
-    Flatten,
-    Input,
-    MaxPool2D,
-)
 
 tf.keras.backend.set_floatx("float32")
 
@@ -183,6 +177,8 @@ class Actor:
         # Convert model to TFLite Flatbuffer
         tflite_model = model_converter.convert()
         # Save the model to disk/persistent-storage
+        if not os.path.exists(actor_model_save_dir):
+            os.makedirs(actor_model_save_dir)
         actor_model_file_name = os.path.join(actor_model_save_dir, "model.tflite")
         with open(actor_model_file_name, "wb") as model_file:
             model_file.write(tflite_model)
@@ -274,12 +270,14 @@ class Critic:
 
     def save_tflite(self, model_dir: str, version: int = 1):
         """Save/Export Critic model in TensorFlow Lite format"""
-        actor_model_save_dir = os.path.join(model_dir, "critic", str(version))
+        critic_model_save_dir = os.path.join(model_dir, "critic", str(version))
         model_converter = tf.lite.TFLiteConverter.from_keras_model(self.model)
         # Convert model to TFLite Flatbuffer
         tflite_model = model_converter.convert()
         # Save the model to disk/persistent-storage
-        critic_model_file_name = os.path.join(actor_model_save_dir, "model.tflite")
+        if not os.path.exists(critic_model_save_dir):
+            os.makedirs(critic_model_save_dir)
+        critic_model_file_name = os.path.join(critic_model_save_dir, "model.tflite")
         with open(critic_model_file_name, "wb") as model_file:
             model_file.write(tflite_model)
         print(f"Critic model saved in TFLite format at:{critic_model_file_name}")
@@ -390,6 +388,10 @@ class PPOAgent:
         self.critic.save(model_dir, version)
 
     def save_tflite(self, model_dir: str, version: int = 1):
+        # Make sure `toco_from_protos binary` is on system's PATH to avoid TFLite ConverterError
+        toco_bin_dir = os.path.dirname(sys.executable)
+        if not toco_bin_dir in os.environ["PATH"]:
+            os.environ["PATH"] += os.pathsep + toco_bin_dir
         print(f"Saving Agent model (TFLite) to:{model_dir}\n")
         self.actor.save_tflite(model_dir, version)
         self.critic.save_tflite(model_dir, version)
