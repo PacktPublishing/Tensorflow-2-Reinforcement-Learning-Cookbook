@@ -28,7 +28,7 @@ tf.keras.backend.set_floatx("float64")
 parser = argparse.ArgumentParser(
     prog="TFRL-Cookbook-Ch6-SocialMedia-Mute-User-DDPGAgent"
 )
-parser.add_argument("--env", default="Pendulum-v0")
+parser.add_argument("--env", default="MiniWoBBookFlightVisualEnv-v0")
 parser.add_argument("--actor_lr", type=float, default=0.0005)
 parser.add_argument("--critic_lr", type=float, default=0.001)
 parser.add_argument("--batch_size", type=int, default=64)
