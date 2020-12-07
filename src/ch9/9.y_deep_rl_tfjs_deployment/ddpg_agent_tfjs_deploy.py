@@ -3,6 +3,7 @@
 # Chapter 9, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 
 import argparse
+import copy
 import os
 import random
 from collections import deque
@@ -22,12 +23,14 @@ from tensorflow.keras.layers import (
     MaxPool2D,
 )
 
+import webgym
+
 tf.keras.backend.set_floatx("float64")
 
 parser = argparse.ArgumentParser(
     prog="TFRL-Cookbook-Ch9-DDPGAgent-TensorFlow.js-exporter"
 )
-parser.add_argument("--env", default="Pong-v4")
+parser.add_argument("--env", default="MiniWoBSocialMediaMuteUserVisualEnv-v0")
 parser.add_argument("--actor_lr", type=float, default=0.0005)
 parser.add_argument("--critic_lr", type=float, default=0.001)
 parser.add_argument("--batch_size", type=int, default=64)
@@ -124,8 +127,10 @@ class Actor:
             kernel_initializer=self.weight_initializer,
         )(dropout2)
         # Scale & clip x[i] to be in range [0, action_bound[i]]
+        action_bound = copy.deepcopy(self.action_bound)
         mu_output = Lambda(
-            lambda x: tf.clip_by_value(x * self.action_bound, 1e-9, self.action_bound)
+            lambda x: tf.clip_by_value(x * action_bound, 1e-9, action_bound),
+            name="mu_output",
         )(output_val)
         return tf.keras.models.Model(inputs=obs_input, outputs=mu_output, name="Actor")
 

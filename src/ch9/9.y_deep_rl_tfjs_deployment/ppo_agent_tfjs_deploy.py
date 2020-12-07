@@ -3,7 +3,6 @@
 # Chapter 9, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 
 import argparse
-import copy
 import os
 from datetime import datetime
 
@@ -18,7 +17,6 @@ from tensorflow.keras.layers import (
     Dropout,
     Flatten,
     Input,
-    Lambda,
     MaxPool2D,
 )
 
