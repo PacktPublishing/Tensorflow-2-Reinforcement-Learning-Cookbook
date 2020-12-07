@@ -374,7 +374,7 @@ class PPOAgent:
                     episode_reward += reward
                     state = next_state
 
-                print(f"Episode#{ep} Reward:{episode_reward} Actions:{action_batch}")
+                print(f"\n Episode#{ep} Reward:{episode_reward} Actions:{action_batch}")
                 tf.summary.scalar("episode_reward", episode_reward, step=ep)
 
     def save(self, model_dir: str, version: int = 1):

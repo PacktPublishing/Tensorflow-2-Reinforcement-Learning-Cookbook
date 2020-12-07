@@ -369,7 +369,7 @@ class DDPGAgent:
                     and self.buffer.size() >= args.train_start
                 ):
                     self.replay_experience()
-                print(f"Episode#{ep} Reward:{episode_reward}")
+                print(f"\n Episode#{ep} Reward:{episode_reward}")
                 tf.summary.scalar("episode_reward", episode_reward, step=ep)
 
     def save_tfjs(self, model_dir: str, version: int = 1):
