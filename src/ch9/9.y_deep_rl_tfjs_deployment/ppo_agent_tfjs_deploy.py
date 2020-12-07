@@ -84,6 +84,7 @@ class Actor:
             input_shape=self.state_dim,
             data_format="channels_last",
             activation="relu",
+            name="img_obs",
         )(obs_input)
         pool1 = MaxPool2D(pool_size=(3, 3), strides=1)(conv1)
         conv2 = Conv2D(
@@ -124,6 +125,7 @@ class Actor:
             self.action_dim,
             activation="softmax",
             kernel_initializer=self.weight_initializer,
+            name="action",
         )(dropout2)
         return tf.keras.models.Model(
             inputs=obs_input, outputs=output_discrete_action, name="Actor"
@@ -202,6 +204,7 @@ class Critic:
             input_shape=self.state_dim,
             data_format="channels_last",
             activation="relu",
+            name="image_obs",
         )(obs_input)
         pool1 = MaxPool2D(pool_size=(3, 3), strides=2)(conv1)
         conv2 = Conv2D(
@@ -238,7 +241,10 @@ class Critic:
         )(dropout1)
         dropout2 = Dropout(0.3)(dense2)
         value = Dense(
-            1, activation="linear", kernel_initializer=self.weight_initializer
+            1,
+            activation="linear",
+            kernel_initializer=self.weight_initializer,
+            name="value",
         )(dropout2)
 
         return tf.keras.models.Model(inputs=obs_input, outputs=value, name="Critic")
@@ -319,7 +325,7 @@ class PPOAgent:
                     step_num += 1
                     print(
                         f"ep#:{ep} step#:{step_num} step_rew:{reward} action:{action} dones:{dones}",
-                        end="\r"
+                        end="\r",
                     )
                     done = np.all(dones)
                     if done:
@@ -340,7 +346,9 @@ class PPOAgent:
                             [old_pi.squeeze() for old_pi in old_policy_batch]
                         )
                         v_values = self.critic.model.predict(states)
-                        next_v_value = self.critic.model.predict(np.expand_dims(next_state,0))
+                        next_v_value = self.critic.model.predict(
+                            np.expand_dims(next_state, 0)
+                        )
 
                         gaes, td_targets = self.gae_target(
                             rewards, v_values, next_v_value, done
