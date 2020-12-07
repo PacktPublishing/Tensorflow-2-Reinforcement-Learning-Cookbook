@@ -137,8 +137,6 @@ class Actor:
             state_np = np.expand_dims(state_np, 0)
         logits = self.model.predict(state_np)  # shape: (batch_size, self.action_dim)
         action = np.random.choice(self.action_dim, p=logits[0])
-        # Clip action to be between 0 and max obs screen size
-        action = np.clip(action, 0, self.action_bound)
         # 1 Action per instance of env; Env expects: (num_instances, actions)
         # action = (action,)
         return logits, action
@@ -315,41 +313,34 @@ class PPOAgent:
 
                 while not done:
                     # self.env.render()
-                    log_old_policy, action = self.actor.get_action(state)
+                    logits, action = self.actor.get_action(state)
 
                     next_state, reward, dones, _ = self.env.step(action)
                     step_num += 1
                     print(
-                        f"ep#:{ep} step#:{step_num} step_rew:{reward} action:{action} dones:{dones}"
+                        f"ep#:{ep} step#:{step_num} step_rew:{reward} action:{action} dones:{dones}",
+                        end="\r"
                     )
                     done = np.all(dones)
                     if done:
                         next_state = prev_state
                     else:
                         prev_state = next_state
-                    state = np.array([np.array(s) for s in state])
-                    next_state = np.array([np.array(s) for s in next_state])
-                    reward = np.reshape(reward, [1, 1])
-                    log_old_policy = np.reshape(log_old_policy, [1, 1])
 
                     state_batch.append(state)
                     action_batch.append(action)
                     reward_batch.append((reward + 8) / 8)
-                    old_policy_batch.append(log_old_policy)
+                    old_policy_batch.append(logits)
 
                     if len(state_batch) >= args.update_freq or done:
                         states = np.array([state.squeeze() for state in state_batch])
-                        # Convert ([x, y],) to [x, y]
-                        actions = np.array([action[0] for action in action_batch])
-                        rewards = np.array(
-                            [reward.squeeze() for reward in reward_batch]
-                        )
+                        actions = np.array(action_batch)
+                        rewards = np.array(reward_batch)
                         old_policies = np.array(
                             [old_pi.squeeze() for old_pi in old_policy_batch]
                         )
-
                         v_values = self.critic.model.predict(states)
-                        next_v_value = self.critic.model.predict(next_state)
+                        next_v_value = self.critic.model.predict(np.expand_dims(next_state,0))
 
                         gaes, td_targets = self.gae_target(
                             rewards, v_values, next_v_value, done
@@ -373,8 +364,8 @@ class PPOAgent:
                         reward_batch = []
                         old_policy_batch = []
 
-                    episode_reward += reward[0][0]
-                    state = next_state[0]
+                    episode_reward += reward
+                    state = next_state
 
                 print(f"Episode#{ep} Reward:{episode_reward} Actions:{action_batch}")
                 tf.summary.scalar("episode_reward", episode_reward, step=ep)
