@@ -24,7 +24,7 @@ from tensorflow.keras.layers import (
 
 tf.keras.backend.set_floatx("float64")
 
-parser = argparse.ArgumentParser(prog="TFRL-Cookbook-Ch6-SocialMedia-Mute-User-Agent")
+parser = argparse.ArgumentParser(prog="TFRL-Cookbook-Ch9-PPO-trainer-exporter-TF.js")
 parser.add_argument(
     "--env",
     default="procgen:procgen-coinrun-v0",
@@ -45,6 +45,7 @@ parser.add_argument(
         "procgen:procgen-ninja",
         "procgen:procgen-plunder",
         "procgen:procgen-starpilot",
+        "Pong-v4",
     ],
 )
 parser.add_argument("--update-freq", type=int, default=16)
