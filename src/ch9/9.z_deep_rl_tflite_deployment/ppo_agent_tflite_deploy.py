@@ -12,7 +12,6 @@ import numpy as np
 import procgen  # Used to register procgen envs with Gym registry
 import tensorflow as tf
 from tensorflow.keras.layers import Conv2D, Dense, Dropout, Flatten, Input, MaxPool2D
-from tensorflow.python.autograph.core import converter
 
 tf.keras.backend.set_floatx("float32")
 
