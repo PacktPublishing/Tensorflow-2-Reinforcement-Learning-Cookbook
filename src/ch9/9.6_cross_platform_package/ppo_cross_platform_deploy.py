@@ -208,8 +208,8 @@ class Actor:
         actor_model_save_path = os.path.join(
             model_dir, "actor", str(version), "model.onnx"
         )
-        onnx_model = keras2onnx.convert_keras(self.mode, self.model.name)
-        keras2onnx.save_modelO(onnx_model, actor_model_save_path)
+        onnx_model = keras2onnx.convert_keras(self.model, self.model.name)
+        keras2onnx.save_model(onnx_model, actor_model_save_path)
         print(f"Actor model saved in ONNX format at:{actor_model_save_path}")
 
 
@@ -330,8 +330,8 @@ class Critic:
         critic_model_save_path = os.path.join(
             model_dir, "critic", str(version), "model.onnx"
         )
-        onnx_model = keras2onnx.convert_keras(self.mode, self.model.name)
-        keras2onnx.save_modelO(onnx_model, critic_model_save_path)
+        onnx_model = keras2onnx.convert_keras(self.model, self.model.name)
+        keras2onnx.save_model(onnx_model, critic_model_save_path)
         print(f"Critic model saved in ONNX format at:{critic_model_save_path}")
 
 
@@ -449,6 +449,7 @@ class PPOAgent:
         self.critic.save_tflite(model_dir, version)
 
     def save_h5(self, model_dir: str, version: int = 1):
+        print(f"Saving Agent model (HDF5) to:{model_dir}\n")
         self.actor.save_h5(model_dir, version)
         self.critic.save_h5(model_dir, version)
 
@@ -473,4 +474,7 @@ if __name__ == "__main__":
     agent_name = f"PPO_{env_name}"
     agent_version = 1
     agent_model_path = os.path.join(model_dir, agent_name)
+    agent.save_onnx(agent_model_path, agent_version)
+    agent.save_h5(agent_model_path, agent_version)
+    agent.save_tfjs(agent_model_path, agent_version)
     agent.save_tflite(agent_model_path, agent_version)
