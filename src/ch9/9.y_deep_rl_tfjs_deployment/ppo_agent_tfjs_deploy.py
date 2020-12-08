@@ -169,11 +169,11 @@ class Actor:
         self.opt.apply_gradients(zip(grads, self.model.trainable_variables))
         return loss
 
-    def save(self, model_dir: str, version: int = 1):
+    def save_h5(self, model_dir: str, version: int = 1):
         actor_model_save_dir = os.path.join(
-            model_dir, "actor", str(version), "model.savedmodel"
+            model_dir, "actor", str(version), "model.h5"
         )
-        self.model.save(actor_model_save_dir, save_format="tf")
+        self.model.save(actor_model_save_dir, save_format="h5")
         print(f"Actor model saved at:{actor_model_save_dir}")
 
     def save_tfjs(self, model_dir: str, version: int = 1):
@@ -261,11 +261,11 @@ class Critic:
         self.opt.apply_gradients(zip(grads, self.model.trainable_variables))
         return loss
 
-    def save(self, model_dir: str, version: int = 1):
+    def save_h5(self, model_dir: str, version: int = 1):
         critic_model_save_dir = os.path.join(
-            model_dir, "critic", str(version), "model.savedmodel"
+            model_dir, "critic", str(version), "model.h5"
         )
-        self.model.save(critic_model_save_dir, save_format="tf")
+        self.model.save(critic_model_save_dir, save_format="h5")
         print(f"Critic model saved at:{critic_model_save_dir}")
 
     def save_tfjs(self, model_dir: str, version: int = 1):
@@ -377,9 +377,9 @@ class PPOAgent:
                 print(f"\n Episode#{ep} Reward:{episode_reward} Actions:{action_batch}")
                 tf.summary.scalar("episode_reward", episode_reward, step=ep)
 
-    def save(self, model_dir: str, version: int = 1):
-        self.actor.save(model_dir, version)
-        self.critic.save(model_dir, version)
+    def save_h5(self, model_dir: str, version: int = 1):
+        self.actor.save_h5(model_dir, version)
+        self.critic.save_h5(model_dir, version)
 
     def save_tfjs(self, model_dir: str, version: int = 1):
         print(f"Saving Agent model to:{model_dir}\n")
@@ -397,4 +397,5 @@ if __name__ == "__main__":
     agent_name = f"PPO_{env_name}"
     agent_version = 1
     agent_model_path = os.path.join(model_dir, agent_name)
+    # agent.save_h5(agent_model_path, agent_version)
     agent.save_tfjs(agent_model_path, agent_version)

@@ -156,6 +156,13 @@ class Actor:
         # 1 Action per instance of env; Env expects: (num_instances, actions)
         return action
 
+    def save_h5(self, model_dir: str, version: int = 1):
+        actor_model_save_dir = os.path.join(
+            model_dir, "actor", str(version), "model.h5"
+        )
+        self.model.save(actor_model_save_dir, save_format="h5")
+        print(f"Actor model saved at:{actor_model_save_dir}")
+
     def save_tfjs(self, model_dir: str, version: int = 1):
         """Save/Export Actor model in TensorFlow.js supported format"""
         actor_model_save_dir = os.path.join(
@@ -247,6 +254,13 @@ class Critic:
         grads = tape.gradient(loss, self.model.trainable_variables)
         self.opt.apply_gradients(zip(grads, self.model.trainable_variables))
         return loss
+
+    def save_h5(self, model_dir: str, version: int = 1):
+        critic_model_save_dir = os.path.join(
+            model_dir, "critic", str(version), "model.h5"
+        )
+        self.model.save(critic_model_save_dir, save_format="h5")
+        print(f"Critic model saved at:{critic_model_save_dir}")
 
     def save_tfjs(self, model_dir: str, version: int = 1):
         """Save/Export Critic model in TensorFlow.js supported format"""
@@ -377,6 +391,10 @@ class DDPGAgent:
         self.actor.save_tfjs(model_dir, version)
         self.critic.save_tfjs(model_dir, version)
 
+    def save_h5(self, model_dir: str, version: int = 1):
+        self.actor.save_h5(model_dir, version)
+        self.critic.save_h5(model_dir, version)
+
 
 if __name__ == "__main__":
     env_name = args.env
@@ -388,4 +406,5 @@ if __name__ == "__main__":
     agent_name = f"DDPG_{env_name}"
     agent_version = 1
     agent_model_path = os.path.join(model_dir, agent_name)
+    # agent.save_h5(agent_model_path, agent_version)
     agent.save_tfjs(agent_model_path, agent_version)
