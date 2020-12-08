@@ -474,6 +474,7 @@ if __name__ == "__main__":
     agent_name = f"PPO_{env_name}"
     agent_version = 1
     agent_model_path = os.path.join(model_dir, agent_name)
+    agent.save(agent_model_path, agent_version)
     agent.save_onnx(agent_model_path, agent_version)
     agent.save_h5(agent_model_path, agent_version)
     agent.save_tfjs(agent_model_path, agent_version)
