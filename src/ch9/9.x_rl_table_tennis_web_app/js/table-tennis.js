@@ -1,4 +1,4 @@
-const WINNER_SCORE = 3;
+const WINNER_SCORE = 5;
 const PADDLE_HEIGHT = 100;
 const PADDLE_THICKNESS = 10;
 
@@ -201,13 +201,13 @@ function render() {
 
     if (player1Score >= WINNER_SCORE) {
       context.fillText(
-        "Left Player Won!",
+        "Red Player Won!",
         canvas.width / 2,
         (canvas.height * 1) / 4
       );
     } else if (player2Score >= WINNER_SCORE) {
       context.fillText(
-        "Right Player Won!",
+        "Blue Player Won!",
         canvas.width / 2,
         (canvas.height * 1) / 4
       );
