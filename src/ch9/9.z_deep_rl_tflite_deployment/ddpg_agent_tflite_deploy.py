@@ -1,5 +1,5 @@
 #!/usr/bin/env/ python
-# Train & export DDPG agent for building mobile apps using TensorFlow Lite
+# Train & export DDPG Deep RL agent for building mobile apps using TensorFlow Lite
 # Chapter 9, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 
 import argparse
