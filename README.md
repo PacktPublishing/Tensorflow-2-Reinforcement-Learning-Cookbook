@@ -19,19 +19,37 @@ The TFRL Cookbook provides recipes for you to:
 
 ## TFRL Cookbook contents
 
-- Chapter 1: Developing building blocks for Deep RL using TensorFlow 2.x & Keras
+### Chapter 1: Developing building blocks for Deep RL using TensorFlow 2.x & Keras
 
-  1.1 Building environment and reward mechanism for training RL agents
+- 1.1 Building environment and reward mechanism for training RL agents
 
-  1.2 Implementing Neural-Network-based RL policies for discrete action spaces and decision-making problems
+- 1.2 Implementing neural-network-based RL policies for discrete action spaces and decision-making problems
 
-  1.3 Implementing Neural-Network-based RL policies for continuous action spaces and continuous-control problems
+- 1.3 Implementing neural-network-based RL policies for continuous action spaces and continuous-control problems
 
-  1.4 Working with OpenAI Gym for RL training environments
+- 1.4 Working with OpenAI Gym for RL training environments
 
-  1.5 Building a Neural Agent
+- 1.5 Building a neural agent
 
-  1.6 Building a Neural Evolutionary Agent
+- 1.6 Building a neural evolutionary Agent
+
+### Chapter 2: Implementing value-based, policy gradients and actor-critic Deep RL algorithms
+
+- 2.1 Building stochastic environmnts for training RL agents
+
+- 2.2 Building value-based Reinforcement Learning agent algorithms
+
+- 2.3 Implementing Temporal Difference (TD) Learning
+
+- 2.4 Building Monte-Carlo prediction and control for RL
+
+- 2.5 Implementing SARSA algorithm and SARSA agent
+
+- 2.6 Building a Q-Learning agent
+
+- 2.7 Implementing Policy Gradients (PG) and a PG agent
+
+- 2.8 Implementing Actor-Critic Algorithms and agent
 
 ## Getting started
 
