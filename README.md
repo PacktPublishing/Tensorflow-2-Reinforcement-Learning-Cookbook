@@ -17,6 +17,22 @@ The TFRL Cookbook provides recipes for you to:
 | **Deploy**: RL agents to the cloud and edge for real-world testing by creating cloud services, web apps and Android mobile apps using TensorFlow Lite, TensorFlow.js, ONNX and Triton |
 | |
 
+## TFRL Cookbook contents
+
+- Chapter 1: Developing building blocks for Deep RL using TensorFlow 2.x & Keras
+
+  1.1 Building environment and reward mechanism for training RL agents
+
+  1.2 Implementing Neural-Network-based RL policies for discrete action spaces and decision-making problems
+
+  1.3 Implementing Neural-Network-based RL policies for continuous action spaces and continuous-control problems
+
+  1.4 Working with OpenAI Gym for RL training environments
+
+  1.5 Building a Neural Agent
+
+  1.6 Building a Neural Evolutionary Agent
+
 ## Getting started
 
 1. Install system dependencies:`sudo apt install -y make cmake ffmpeg`
