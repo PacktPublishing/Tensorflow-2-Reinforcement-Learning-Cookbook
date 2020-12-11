@@ -77,6 +77,14 @@ The TFRL Cookbook provides recipes for you to:
 
 - 4.4 Training cryptocurrency trading bot using RL
 
+### Chapter 5: RL in real-world: Building stock/share trading agents
+
+- 5.1 Building stock-market trading RL platform using real stock-exchange data
+
+- 5.2 Building stock-market trading RL platform using price charts
+
+- 5.3 Building advanced stock trading RL platform to train agents that trade like human pros
+
 ## Getting started
 
 1. Install system dependencies:`sudo apt install -y make cmake ffmpeg`
