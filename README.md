@@ -17,7 +17,7 @@ The TFRL Cookbook provides recipes for you to:
 | **Deploy**: RL agents to the cloud and edge for real-world testing by creating cloud services, web apps and Android mobile apps using TensorFlow Lite, TensorFlow.js, ONNX and Triton |
 | |
 
-## TFRL Cookbook contents
+## TFRL Cookbook recipes
 
 ### Chapter 1: Developing building blocks for Deep RL using TensorFlow 2.x & Keras
 
