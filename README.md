@@ -85,6 +85,20 @@ The TFRL Cookbook provides recipes for you to:
 
 - 5.3 Building advanced stock trading RL platform to train agents that trade like human pros
 
+### Chapter 6: RL in real-world: Building intelligent agents to complete your To-Dos
+
+- 6.1 Building learning environments for real-world RL
+
+- 6.2 Building an RL agent to complete tasks on the web: Call to Action bot
+
+- 6.3 Building a visual auto-login bot
+
+- 6.4 Training an RL agent to automate flight booking for your travel
+
+- 6.5 Training an RL agent to manage your emails
+
+- 6.6 Training an RL agent to automate your social-media account management
+
 ## Getting started
 
 1. Install system dependencies:`sudo apt install -y make cmake ffmpeg`
