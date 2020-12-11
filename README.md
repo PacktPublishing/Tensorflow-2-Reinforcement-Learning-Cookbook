@@ -127,6 +127,8 @@ The TFRL Cookbook provides recipes for you to:
 
 ### Chapter 9: Deploying Deep RL agents on multiple platforms
 
+- 9.0 Runtime options for cross-platform deployments
+
 - 9.1 Packaging Deep RL agents for mobile and IoT devices using TensorFlow Lite
 
 - 9.2 Deploying RL agents on mobile devices
