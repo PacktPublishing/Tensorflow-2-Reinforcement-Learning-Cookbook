@@ -51,6 +51,22 @@ The TFRL Cookbook provides recipes for you to:
 
 - 2.8 Implementing Actor-Critic Algorithms and agent
 
+### Chapter 3: Implementing Advanced (Deep) RL algorithms
+
+- 3.1 Implementing Deep Q-Learning, DQN and Double-DQN agent
+
+- 3.2 Implementing Dueling DQN agent
+
+- 3.3 Implementing Double Dueling DQN algorithm and the DDDQN agent
+
+- 3.4 Implementing Deep Recurrent Q-Learning algorithm and the DRQN Agent
+
+- 3.5 Implementing Asynchronous Advantage Actor-Critic algorithm and the A3C agent
+
+- 3.6 Implementing Proximal Policy Optimization algorithm and the PPO agent
+
+- 3.7 Implementing Deep Deterministic Policy Gradient algorithm and the DDPG agent
+
 ## Getting started
 
 1. Install system dependencies:`sudo apt install -y make cmake ffmpeg`
