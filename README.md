@@ -99,6 +99,20 @@ The TFRL Cookbook provides recipes for you to:
 
 - 6.6 Training an RL agent to automate your social-media account management
 
+### Chapter 7: Deploying Deep RL agents to the cloud
+
+- 7.1 Implementing RL agent's runtime components
+
+- 7.2 Building RL environment simulator as a service
+
+- 7.3 Training RL agents using remote simulator instances
+
+- 7.4 Ealuating/testing RL agents
+
+- 7.5 Packaging RL agents for deployment: A trading bot
+
+- 7.6 Deploying RL agents to the cloud: Trading-Bot-as-a-Service
+
 ## Getting started
 
 1. Install system dependencies:`sudo apt install -y make cmake ffmpeg`
