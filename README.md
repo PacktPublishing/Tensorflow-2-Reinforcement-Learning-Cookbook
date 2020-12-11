@@ -67,6 +67,16 @@ The TFRL Cookbook provides recipes for you to:
 
 - 3.7 Implementing Deep Deterministic Policy Gradient algorithm and the DDPG agent
 
+### Chapter 4: RL in real-world: Building cryptocurrency trading agents
+
+- 4.1 Building Bitcoin trading RL platform using real market data
+
+- 4.2 Building Ethereum tradingRL platform using price charts
+
+- 4.3 Building advanced cryptocurrency trading platform for RL agents
+
+- 4.4 Training cryptocurrency trading bot using RL
+
 ## Getting started
 
 1. Install system dependencies:`sudo apt install -y make cmake ffmpeg`
