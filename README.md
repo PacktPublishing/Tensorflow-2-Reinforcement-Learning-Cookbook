@@ -125,6 +125,18 @@ The TFRL Cookbook provides recipes for you to:
 
 - 8.5 Large-scale Deep RL agent training using Ray, Tune and RLLib
 
+### Chapter 9: Deploying Deep RL agents on multiple platforms
+
+- 9.1 Packaging Deep RL agents for mobile and IoT devices using TensorFlow Lite
+
+- 9.2 Deploying RL agents on mobile devices
+
+- 9.3 Packaging Deep RL agents for the web and Node.js using TensorFlow.js
+
+- 9.4 Deploying Deep-RL-Agent-as-a-Service
+
+- 9.5 Packaging Deep RL agents for cross-platform deployments
+
 ## Getting started
 
 1. Install system dependencies:`sudo apt install -y make cmake ffmpeg`
