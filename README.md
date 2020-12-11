@@ -113,6 +113,18 @@ The TFRL Cookbook provides recipes for you to:
 
 - 7.6 Deploying RL agents to the cloud: Trading-Bot-as-a-Service
 
+### Chapter 8: Distributed training for accelerated development of Deep RL agents
+
+- 8.1 Building distributed deep learning models using TensorFlow 2.x: Multi-GPU training
+
+- 8.2 Scaling up and out: Multi-machine, multi-GPU training
+
+- 8.3 Training Deep RL agents at scale: Multi-GPU PPO agent
+
+- 8.4 Building blocks for distributed Deep Reinforcement learning for accelerated training
+
+- 8.5 Large-scale Deep RL agent training using Ray, Tune and RLLib
+
 ## Getting started
 
 1. Install system dependencies:`sudo apt install -y make cmake ffmpeg`
