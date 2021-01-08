@@ -17,7 +17,7 @@ from tensorflow.keras.layers import Concatenate, Dense, Input
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
 
-from stock_trading_continuous_env import StockTradingContinuousEnv
+from crypto_trading_continuous_env import CryptoTradingContinuousEnv
 
 tf.keras.backend.set_floatx("float64")
 
@@ -371,7 +371,7 @@ class SAC(object):
 
 
 if __name__ == "__main__":
-    gym_env = StockTradingContinuousEnv()
+    gym_env = CryptoTradingContinuousEnv()
     sac = SAC(gym_env)
 
     # sac.load_actor("sac_actor_episodexyz.h5")
