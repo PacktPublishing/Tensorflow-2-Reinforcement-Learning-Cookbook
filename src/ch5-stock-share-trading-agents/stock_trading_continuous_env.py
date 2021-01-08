@@ -96,7 +96,7 @@ class StockTradingContinuousEnv(gym.Env):
             self.viz = TradeVisualizer(
                 self.ticker,
                 self.ticker_file_stream,
-                "TFRL-Cookbook Ch4-StockTradingEnv",
+                "TFRL-Cookbook Ch5-StockTradingEnv",
             )
 
         return self.get_observation()
