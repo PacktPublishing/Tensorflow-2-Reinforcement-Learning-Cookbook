@@ -54,8 +54,10 @@ class CryptoTradingVisualContinuousEnv(gym.Env):
         ), f"Crypto data file stream not found at: data/{self.ticker_file_stream}.csv"
         # Crypto exchange data stream. An offline file stream is used. Alternatively, a web
         # API can be used to pull live data.
-        self.ohlcv_df = pd.read_csv(self.ticker_file_stream, skiprows=1).sort_values(
-            by="Date"
+        self.ohlcv_df = (
+            pd.read_csv(self.ticker_file_stream, skiprows=1)
+            .sort_values(by="Date")
+            .reset_index(drop=True)
         )
 
         self.opening_account_balance = env_config["opening_account_balance"]
