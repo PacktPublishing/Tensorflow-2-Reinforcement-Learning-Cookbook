@@ -74,7 +74,7 @@ class MiniWoBEnv(MiniWoBEnvironment, gym.Env):
 
 
 if __name__ == "__main__":
-    env = MiniWoBEnv("click-pie")
+    env = MiniWoBEnv("click-pie", obs_im_shape=(320, 240))
     for _ in range(10):
         obs = env.reset()
         done = False
