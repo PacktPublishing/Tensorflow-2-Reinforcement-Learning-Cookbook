@@ -1,4 +1,4 @@
-#!/usr/bin/env/ python
+#!/usr/bin/env python
 # SAC RL agent runtime componenets for deploying as a service
 # Chapter 7, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 

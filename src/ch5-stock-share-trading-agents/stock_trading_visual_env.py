@@ -1,4 +1,4 @@
-#!/usr/bin/env/ python
+#!/usr/bin/env python
 # Visual stock/share trading environment with indicators & real data
 # Chapter 5, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 

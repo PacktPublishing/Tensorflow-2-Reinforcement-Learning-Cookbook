@@ -1,4 +1,4 @@
-#!/usr/bin/env/ python
+#!/usr/bin/env python
 # Train PPO agents to book flight tickets on the web
 # Chapter 6, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 

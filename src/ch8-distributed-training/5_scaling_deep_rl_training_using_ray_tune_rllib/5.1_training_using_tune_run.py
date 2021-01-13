@@ -1,4 +1,4 @@
-#!/usr/bin/env/ python
+#!/usr/bin/env python
 # Large-scale training of PPO agent using Ray Tune
 # Chapter 8, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 

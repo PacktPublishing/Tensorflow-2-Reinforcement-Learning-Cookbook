@@ -1,4 +1,4 @@
-#!/usr/bin/env/ python
+#!/usr/bin/env python
 # Visual crypto currency trading RL env with continuous-valued trade actions
 # Chapter 4, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 

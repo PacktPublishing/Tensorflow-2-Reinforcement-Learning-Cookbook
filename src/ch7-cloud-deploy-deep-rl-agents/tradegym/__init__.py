@@ -1,4 +1,4 @@
-#!/usr/bin/env/ python
+#!/usr/bin/env python
 # TradeGym env registration script
 # Chapter 7, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 

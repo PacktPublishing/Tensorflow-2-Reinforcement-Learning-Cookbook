@@ -1,4 +1,4 @@
-#!/usr/bin/env/ python
+#!/usr/bin/env python
 # Soft Actor-Critic (SAC) agent training script
 # Chapter 4, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 

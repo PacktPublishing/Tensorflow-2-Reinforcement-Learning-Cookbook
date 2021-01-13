@@ -1,4 +1,4 @@
-#!/usr/bin/env/ python
+#!/usr/bin/env python
 # Train and Save PPO agent models in RL envs with image observations, continuous actions
 # Chapter 9, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 import argparse

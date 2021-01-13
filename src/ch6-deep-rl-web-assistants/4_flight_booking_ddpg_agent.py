@@ -1,4 +1,4 @@
-#!/usr/bin/env/ python
+#!/usr/bin/env python
 # Train DDPG agents to book flight tickets
 # Chapter N, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 

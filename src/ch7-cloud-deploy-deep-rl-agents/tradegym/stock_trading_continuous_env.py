@@ -1,4 +1,4 @@
-#!/usr/bin/env/ python
+#!/usr/bin/env python
 # Stock/share trading RL environment with continuous-valued trade actions
 # Chapter 7, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 

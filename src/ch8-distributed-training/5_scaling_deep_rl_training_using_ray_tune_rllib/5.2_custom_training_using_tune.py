@@ -1,4 +1,4 @@
-#!/usr/bin/env/ python
+#!/usr/bin/env python
 # Training Deep RL agents with custom models using Ray Tune
 # Chapter 8, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 

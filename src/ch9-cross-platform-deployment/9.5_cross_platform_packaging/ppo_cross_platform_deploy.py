@@ -1,4 +1,4 @@
-#!/usr/bin/env/ python
+#!/usr/bin/env python
 # Train & export PPO Deep RL agent in various model formats for building cross platform apps
 # Supported formats include: TF SavedModel, TFLite, TF.js Layers, ONNX
 # Chapter 9, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy

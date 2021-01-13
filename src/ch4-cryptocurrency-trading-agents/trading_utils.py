@@ -1,4 +1,4 @@
-#!/usr/bin/env/ python
+#!/usr/bin/env python
 # Utilities to visualize agent's trade execution and portfolio performance
 # Chapter 4, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 
