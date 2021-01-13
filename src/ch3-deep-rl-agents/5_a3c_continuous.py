@@ -1,4 +1,4 @@
-#!/usr/bin/env/ python
+#!/usr/bin/env python
 # Asynchronous, Advantage Actor-Critic (A3C) agent training script
 # Chapter 3, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 

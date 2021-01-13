@@ -1,4 +1,4 @@
-#!/usr/bin/env/ python
+#!/usr/bin/env python
 # WebGym's base environment definition for RL agent interacting with web pages
 # Chapter 6, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 

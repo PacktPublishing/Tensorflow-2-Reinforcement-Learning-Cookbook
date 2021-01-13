@@ -1,4 +1,4 @@
-#!/usr/bin/env/ python
+#!/usr/bin/env python
 # Recipe for accelerating custom model training using multi-GPU distributed training including model saving & loading
 # Chapter 8, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 # Based on official TensorFlow docs/tutorial

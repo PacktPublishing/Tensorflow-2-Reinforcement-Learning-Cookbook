@@ -1,4 +1,4 @@
-#!/usr/bin/env/ python
+#!/usr/bin/env python
 # WebGym Visual MiniWoB environment registration script
 # TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 

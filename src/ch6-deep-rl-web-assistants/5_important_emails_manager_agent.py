@@ -1,4 +1,4 @@
-#!/usr/bin/env/ python
+#!/usr/bin/env python
 # Train PPO agents to manage important emails in your webmail
 # Chapter 6, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 

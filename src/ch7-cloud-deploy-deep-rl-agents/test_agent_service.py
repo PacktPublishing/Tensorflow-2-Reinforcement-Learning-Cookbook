@@ -1,4 +1,4 @@
-#!/usr/bin/env/ python
+#!/usr/bin/env python
 # Simple test script for the deployed Trading Bot-as-a-Service
 # Chapter 7, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 

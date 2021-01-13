@@ -1,4 +1,4 @@
-#!/usr/bin/env/ python
+#!/usr/bin/env python
 # GridWorld RL environment with image observations
 # Chapter 2, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 

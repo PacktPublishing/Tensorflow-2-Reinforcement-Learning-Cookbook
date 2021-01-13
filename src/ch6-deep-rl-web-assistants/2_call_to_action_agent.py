@@ -1,4 +1,4 @@
-#!/usr/bin/env/ python
+#!/usr/bin/env python
 # Agent training script for completing call-to-action tasks on websites
 # Chapter 6, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 

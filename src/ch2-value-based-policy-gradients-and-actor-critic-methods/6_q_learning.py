@@ -1,4 +1,4 @@
-#!/usr/bin/env/ python
+#!/usr/bin/env python
 # Q-learning algorithm and agent
 # Chapter 2, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 

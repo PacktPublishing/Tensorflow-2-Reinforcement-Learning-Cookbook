@@ -1,4 +1,4 @@
-#!/usr/bin/env/ python
+#!/usr/bin/env python
 # Train & export PPO Deep RL agent for building apps with TensorFlow.js
 # Chapter 9, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 

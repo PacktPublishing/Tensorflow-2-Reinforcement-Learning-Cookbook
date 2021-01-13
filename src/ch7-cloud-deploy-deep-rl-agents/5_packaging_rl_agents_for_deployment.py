@@ -1,4 +1,4 @@
-#!/usr/bin/env/ python
+#!/usr/bin/env python
 # Packaging deep RL agents for cloud deployments
 # Chapter 7, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 
