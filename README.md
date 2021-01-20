@@ -5,9 +5,18 @@
 
 # TensorFlow 2 Reinforcement Learning Cookbook
 
-## About the TFRL Cookbook
+<a href="https://www.packtpub.com/product/tensorflow-2-reinforcement-learning-cookbook/9781838982546?utm_source=github&utm_medium=repository&utm_campaign=9781838982546"><img src="https://static.packt-cdn.com/products/9781838982546/cover/smaller" alt="TensorFlow 2 Reinforcement Learning Cookbook" height="256px" align="right"></a>
 
-The TFRL Cookbook provides recipes for you to:
+This is the code repository for [TensorFlow 2 Reinforcement Learning Cookbook](https://www.packtpub.com/product/tensorflow-2-reinforcement-learning-cookbook/9781838982546?utm_source=github&utm_medium=repository&utm_campaign=9781838982546), published by Packt.
+
+**Over 50 recipes to help you build, train, and deploy learning agents for real-world applications**
+
+## What is this book about?
+With deep reinforcement learning, you can build intelligent agents, products, and services that can go beyond computer vision or perception to perform actions. TensorFlow 2.x is the latest major release of the most popular deep learning framework used to develop and train deep neural networks (DNNs). This book contains easy-to-follow recipes for leveraging TensorFlow 2.x to develop artificial intelligence applications.
+
+Starting with an introduction to the fundamentals of deep reinforcement learning and TensorFlow 2.x, the book covers OpenAI Gym, model-based RL, model-free RL, and how to develop basic agents. You'll discover how to implement advanced deep reinforcement learning algorithms such as actor-critic, deep deterministic policy gradients, deep-Q networks, proximal policy optimization, and deep recurrent Q-networks for training your RL agents. As you advance, you’ll explore the applications of reinforcement learning by building cryptocurrency trading agents, stock/share trading agents, and intelligent agents for automating task completion. Finally, you'll find out how to deploy deep reinforcement learning agents to the cloud and build cross-platform apps using TensorFlow 2.x.
+
+By the end of this TensorFlow book, you'll be able to:
 | |
 | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Build**: Deep RL agents from scratch using the all-new and powerful TensorFlow 2.x framework and Keras API |
@@ -17,133 +26,65 @@ The TFRL Cookbook provides recipes for you to:
 | **Deploy**: RL agents to the cloud and edge for real-world testing by creating cloud services, web apps and Android mobile apps using TensorFlow Lite, TensorFlow.js, ONNX and Triton |
 | |
 
-## TFRL Cookbook recipes
+This book covers the following exciting features: 
+* Build deep reinforcement learning agents from scratch using the all-new TensorFlow 2.x and Keras API
+* Implement state-of-the-art deep reinforcement learning algorithms using minimal code
+* Build, train, and package deep RL agents for cryptocurrency and stock trading
+* Deploy RL agents to the cloud and edge to test them by creating desktop, web, and mobile apps and cloud services
+* Speed up agent development using distributed DNN model training
+* Explore distributed deep RL architectures and discover opportunities in AIaaS (AI as a Service)
 
-### Chapter 1: Developing building blocks for Deep RL using TensorFlow 2.x & Keras
+If you feel this book is for you, get your [copy](https://www.amazon.com/dp/183898254X) today!
 
-- 1.1 Building environment and reward mechanism for training RL agents
+<a href="https://www.packtpub.com/?utm_source=github&utm_medium=banner&utm_campaign=GitHubBanner"><img src="https://raw.githubusercontent.com/PacktPublishing/GitHub/master/GitHub.png" alt="https://www.packtpub.com/" border="5" /></a>
 
-- 1.2 Implementing neural-network-based RL policies for discrete action spaces and decision-making problems
 
-- 1.3 Implementing neural-network-based RL policies for continuous action spaces and continuous-control problems
+## Instructions and Navigations
+All of the code is organized into folders. For example,
 
-- 1.4 Working with OpenAI Gym for RL training environments
+The code will look like the following:
+```
+class Agent(object):
+    def __init__(self, action_dim=5, input_dim=(1, 8 * 8)):
+       self.brain = Brain(action_dim, input_dim)
+       self.policy = DiscretePolicy(action_dim)
+    def get_action(self, obs):
+       action_logits = self.brain.process(obs)
+       action = self.policy.get_action(np.squeeze(action_logits, 0))
+    return action
+```
 
-- 1.5 Building a neural agent
+**Following is what you need for this book:**
+The code in this book is extensively tested on Ubuntu 18.04 and Ubuntu 20.04 and should work with later versions of Ubuntu if Python 3.6+ is available. With Python 3.6+ installed along with the necessary Python packages, as listed at the start of each of the recipes, the code should run fine on Windows and macOS X too. 
 
-- 1.6 Building a neural evolutionary Agent
-
-### Chapter 2: Implementing value-based, policy gradients and actor-critic Deep RL algorithms
-
-- 2.1 Building stochastic environmnts for training RL agents
-
-- 2.2 Building value-based Reinforcement Learning agent algorithms
-
-- 2.3 Implementing Temporal Difference (TD) Learning
-
-- 2.4 Building Monte-Carlo prediction and control for RL
-
-- 2.5 Implementing SARSA algorithm and SARSA agent
-
-- 2.6 Building a Q-Learning agent
-
-- 2.7 Implementing Policy Gradients (PG) and a PG agent
-
-- 2.8 Implementing Actor-Critic Algorithms and agent
-
-### Chapter 3: Implementing Advanced (Deep) RL algorithms
-
-- 3.1 Implementing Deep Q-Learning, DQN and Double-DQN agent
-
-- 3.2 Implementing Dueling DQN agent
-
-- 3.3 Implementing Double Dueling DQN algorithm and the DDDQN agent
-
-- 3.4 Implementing Deep Recurrent Q-Learning algorithm and the DRQN Agent
-
-- 3.5 Implementing Asynchronous Advantage Actor-Critic algorithm and the A3C agent
-
-- 3.6 Implementing Proximal Policy Optimization algorithm and the PPO agent
-
-- 3.7 Implementing Deep Deterministic Policy Gradient algorithm and the DDPG agent
-
-### Chapter 4: RL in real-world: Building cryptocurrency trading agents
-
-- 4.1 Building Bitcoin trading RL platform using real market data
-
-- 4.2 Building Ethereum tradingRL platform using price charts
-
-- 4.3 Building advanced cryptocurrency trading platform for RL agents
-
-- 4.4 Training cryptocurrency trading bot using RL
-
-### Chapter 5: RL in real-world: Building stock/share trading agents
-
-- 5.1 Building stock-market trading RL platform using real stock-exchange data
-
-- 5.2 Building stock-market trading RL platform using price charts
-
-- 5.3 Building advanced stock trading RL platform to train agents that trade like human pros
-
-### Chapter 6: RL in real-world: Building intelligent agents to complete your To-Dos
-
-- 6.1 Building learning environments for real-world RL
-
-- 6.2 Building an RL agent to complete tasks on the web: Call to Action bot
-
-- 6.3 Building a visual auto-login bot
-
-- 6.4 Training an RL agent to automate flight booking for your travel
-
-- 6.5 Training an RL agent to manage your emails
-
-- 6.6 Training an RL agent to automate your social-media account management
-
-### Chapter 7: Deploying Deep RL agents to the cloud
-
-- 7.1 Implementing RL agent's runtime components
-
-- 7.2 Building RL environment simulator as a service
-
-- 7.3 Training RL agents using remote simulator instances
-
-- 7.4 Ealuating/testing RL agents
-
-- 7.5 Packaging RL agents for deployment: A trading bot
-
-- 7.6 Deploying RL agents to the cloud: Trading-Bot-as-a-Service
-
-### Chapter 8: Distributed training for accelerated development of Deep RL agents
-
-- 8.1 Building distributed deep learning models using TensorFlow 2.x: Multi-GPU training
-
-- 8.2 Scaling up and out: Multi-machine, multi-GPU training
-
-- 8.3 Training Deep RL agents at scale: Multi-GPU PPO agent
-
-- 8.4 Building blocks for distributed Deep Reinforcement learning for accelerated training
-
-- 8.5 Large-scale Deep RL agent training using Ray, Tune and RLLib
-
-### Chapter 9: Deploying Deep RL agents on multiple platforms
-
-- 9.0 Runtime options for cross-platform deployments
-
-- 9.1 Packaging Deep RL agents for mobile and IoT devices using TensorFlow Lite
-
-- 9.2 Deploying RL agents on mobile devices
-
-- 9.3 Packaging Deep RL agents for the web and Node.js using TensorFlow.js
-
-- 9.4 Deploying Deep-RL-Agent-as-a-Service
-
-- 9.5 Packaging Deep RL agents for cross-platform deployments
-
-## Getting started
+It is advised to create and use a Python virtual environment named tfrl-cookbook to install the packages and run the code in this book. A Miniconda or Anaconda installation for Python virtual environment management is recommended. Follow these steps to set up a virtual environment:
 
 1. Install system dependencies:`sudo apt install -y make cmake ffmpeg`
 2. Install miniconda: `wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && bash -b -p ${HOME}/miniconda3`
 3. Setup conda python virtual environment: `bash && conda env create -f tfrl-cookbook.yml -n "tfrl-cookbook"`
    You are all set!
-
 4. Activate the `tfrl-cookbook` conda python environment: `conda activate tfrl-cookbook` and get started with the recipes in the book!
+
+It is highly recommended to star and fork the GitHub repository to receive updates and improvements to the code recipes.We urge you to share what you build and also engage with other readers and the community [here](https://github.com/PacktPublishing/Tensorflow-2-Reinforcement-Learning-Cookbook/discussions).
+
+With the following software and hardware list you can run all code files present in the book (Chapter 1-9).
+
+### Software and Hardware List
+
+| Chapter  | Software required                                       | OS required                        |
+| -------- | --------------------------------------------------------| -----------------------------------|
+| 1 - 9    | Python 3.6 (or later versions)                          | Windows, Mac OS X, and Linux (Any) |
+|   9      | Android Studio                                          | Windows, Mac OS X, and Linux (Any) |
+
+We also provide a PDF file that has color images of the screenshots/diagrams used in this book. [Click here to download it](https://static.packt-cdn.com/downloads/9781838982546_ColorImages.pdf).
+
+
+### Related products <Other books you may enjoy>
+* Mastering Reinforcement Learning with Python [[Packt]](https://www.packtpub.com/product/mastering-reinforcement-learning-with-python/9781838644147?utm_source=github&utm_medium=repository&utm_campaign=9781838644147) [[Amazon]](https://www.amazon.com/dp/1838644148)
+
+* Deep Reinforcement Learning with Python - Second Edition [[Packt]](https://www.packtpub.com/product/deep-reinforcement-learning-with-python-second-edition/9781839210686?utm_source=github&utm_medium=repository&utm_campaign=9781839210686) [[Amazon]](https://www.amazon.com/dp/1839210680)
+
+## Get to Know the Author
+**Praveen Palanisamy** works on advancing AI for autonomous systems as a senior AI engineer at Microsoft. In the past, he has developed AI algorithms for autonomous vehicles using deep reinforcement learning, and has worked with start-ups and in academia to build autonomous robots and intelligent systems. He is the inventor of more than 15 patents on learning-based AI systems. He is the author of *HOIAWOG: Hands-On Intelligent Agents with OpenAI Gym*, which provides a step-by-step guide to developing deep RL agents to solve complex problems from scratch. He has a master's in robotics from Carnegie Mellon University.
+
+
