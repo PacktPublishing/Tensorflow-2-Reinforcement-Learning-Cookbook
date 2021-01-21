@@ -1,8 +1,3 @@
-## $5 Tech Unlocked 2021!
-[Buy and download this product for only $5 on PacktPub.com](https://www.packtpub.com/)
------
-*The $5 campaign         runs from __December 15th 2020__ to __January 13th 2021.__*
-
 # TensorFlow 2 Reinforcement Learning Cookbook
 
 <a href="https://www.packtpub.com/product/tensorflow-2-reinforcement-learning-cookbook/9781838982546?utm_source=github&utm_medium=repository&utm_campaign=9781838982546"><img src="https://static.packt-cdn.com/products/9781838982546/cover/smaller" alt="TensorFlow 2 Reinforcement Learning Cookbook" height="256px" align="right"></a>
