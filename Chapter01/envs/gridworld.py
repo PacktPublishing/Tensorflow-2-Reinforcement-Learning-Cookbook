@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # GridWorld RL environment with image observations
 # Chapter 1, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+from collections import defaultdict
 import copy
 import sys
 
@@ -60,13 +61,16 @@ class GridworldEnv(gym.Env):
         # Actions
         self.action_space = gym.spaces.Discrete(5)
         self.actions = [NOOP, UP, DOWN, LEFT, RIGHT]
-        self.action_pos_dict = {
-            NOOP: [0, 0],
-            UP: [-1, 0],
-            DOWN: [1, 0],
-            LEFT: [0, -1],
-            RIGHT: [0, 1],
-        }
+        self.action_pos_dict = defaultdict(
+            lambda: [0, 0],
+            {
+                NOOP: [0, 0],
+                UP: [-1, 0],
+                DOWN: [1, 0],
+                LEFT: [0, -1],
+                RIGHT: [0, 1],
+            },
+        )
         (self.agent_state, self.goal_state) = self.get_state()
         self.step_num = 0  # To keep track of number of steps
         self.max_steps = max_steps
