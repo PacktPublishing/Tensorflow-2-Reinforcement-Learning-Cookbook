@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-# SAC RL Agent with Trainer
-# Chapter 8, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
+# SAC RL agent with Trainer
+# Chapter 7, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 
 import functools
 import random
