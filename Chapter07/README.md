@@ -1,6 +1,6 @@
 ### Chapter 7: Deploying Deep RL agents to the cloud
 
-- ]7.1 Implementing RL agent's runtime components](https://github.com/PacktPublishing/Tensorflow-2-Reinforcement-Learning-Cookbook/blob/master/Chapter07/sac_agent_runtime.py)
+- 7.1 Implementing RL agent's runtime components](https://github.com/PacktPublishing/Tensorflow-2-Reinforcement-Learning-Cookbook/blob/master/Chapter07/sac_agent_runtime.py)
 
 - 7.2 Building RL environment simulator as a service
 

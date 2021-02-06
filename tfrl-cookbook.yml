@@ -242,7 +242,7 @@ dependencies:
     - urllib3==1.25.9
     - wcwidth==0.2.4
     - webencodings==0.5.1
-    - webgym==1.0.0
+    - webgym>=1.0.6
     - widgetsnbextension==3.5.1
     - wrapt==1.12.1
     - yarl==1.6.3
