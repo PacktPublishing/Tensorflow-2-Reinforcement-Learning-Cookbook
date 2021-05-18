@@ -105,5 +105,6 @@ if __name__ == "__main__":
 
     env = gym.make("CartPole-v0")
     agent = Agent(env.action_space.n)
-    num_episodes = 20000
-    train(agent, env, num_episodes)
+    num_episodes = 2  #  Increase number of episodes to train
+    # Set render=True to visualize Agent's actions in the env
+    train(agent, env, num_episodes, render=False)
