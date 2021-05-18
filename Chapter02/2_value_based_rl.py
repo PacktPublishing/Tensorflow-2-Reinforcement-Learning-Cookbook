@@ -2,6 +2,8 @@
 # Value-based reinforcement learning
 # Chapter 2, TensorFlow 2 Reinforcement Learning Cookbook | Praveen Palanisamy
 
+from pathlib import Path
+
 import numpy as np
 
 from envs.maze import MazeEnv
@@ -61,6 +63,7 @@ for state in range(state_dim):
 for state in range(state_dim):
     policy[state] = np.argmax(q_values[state, :])
 
+Path("results").mkdir(exist_ok=True)
 np.save("results/q_values", q_values)
 np.save("results/optimal_policy", policy)
 # print(q_values)
