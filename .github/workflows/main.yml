@@ -1,0 +1,37 @@
+# GitHub workflow for TensorFlow2 Reinforcement Learning Cookbook
+name: TFRL-Cookbook-CI
+
+on:
+  # Enable workflow trigger on push/PR to master when the workflow is finalized
+  # push:
+  #  branches: [ master ]
+  # pull_request:
+  #  branches: [ master ]
+
+  # Allows to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  setup:
+    runs-on: ubuntu-20.04
+    steps:
+      # Checkout code to $GITHUB_WORKSPACE
+      - uses: actions/checkout@v2
+
+      - name: Install basic dependencies
+        run: |
+            sudo apt update
+            sudo apt install -y make cmake ffmpeg freeglut3-dev
+      - name: Setup tfrl-cookbook conda py env
+        run: |
+            wget -O miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+            bash miniconda.sh -b -p $HOME/miniconda
+            source $HOME/miniconda/bin/activate
+            conda init bash
+            conda env create --force -f tfrl-cookbook.yml -n "tfrl-cookbook"
+      - name: Install jupytext & setup ipykernel
+        run: |
+            source $HOME/miniconda/bin/activate
+            conda activate tfrl-cookbook
+            python -m pip install jupytext
+            python -m ipykernel install --user --name=tfrl-cookbook 
