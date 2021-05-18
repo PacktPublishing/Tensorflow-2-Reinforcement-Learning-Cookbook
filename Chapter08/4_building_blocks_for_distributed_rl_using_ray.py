@@ -5,7 +5,6 @@
 import pickle
 import sys
 
-import fire
 import gym
 import numpy as np
 import ray
@@ -190,4 +189,4 @@ def main(
 
 
 if __name__ == "__main__":
-    fire.Fire(main)
+    main(epochs=2)  # Increase value of epochs
