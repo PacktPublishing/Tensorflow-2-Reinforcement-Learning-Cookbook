@@ -38,11 +38,15 @@ jobs:
 
       - name: Ch1 generate .ipynb & .md
         run: |
+            source $HOME/miniconda/bin/activate
+            conda activate tfrl-cookbook
             for fname in `find ./Chapter01 -name "[0-9]*.py"`;do jupytext --set-formats ipynb,py --execute $fname; done;
             for fname in `find ./Chapter01 -name "[0-9]*.ipynb"`;do jupyter nbconvert $fname --to markdown; done;
 
       - name: Ch2 generate .ipynb & .md
         run: |
+            source $HOME/miniconda/bin/activate
+            conda activate tfrl-cookbook
             for fname in `find ./Chapter02 -name "[0-9]*.py"`;do jupytext --set-formats ipynb,py --execute $fname; done;
             for fname in `find ./Chapter02 -name "[0-9]*.ipynb"`;do jupyter nbconvert $fname --to markdown; done;
 
@@ -50,6 +54,8 @@ jobs:
         run: find ./Chapter03 -name "[0-9]*.py" -exec sed -i 's/parser.parse_args()/parser.parse_args(\[\])/g' {} \;
       - name: Ch3 generate .ipynb & .md
         run: |
+            source $HOME/miniconda/bin/activate
+            conda activate tfrl-cookbook
             for fname in `find ./Chapter03 -name "[0-9]*.py"`;do jupytext --set-formats ipynb,py --execute $fname; done;
             for fname in `find ./Chapter03 -name "[0-9]*.ipynb"`;do jupyter nbconvert $fname --to markdown; done;
 
@@ -57,5 +63,7 @@ jobs:
         run: find ./Chapter06 -name "[0-9]*.py" -exec sed -i 's/parser.parse_args()/parser.parse_args(\[\])/g' {} \;
       - name: Ch6 generate .ipynb & .md
         run: |
+            source $HOME/miniconda/bin/activate
+            conda activate tfrl-cookbook
             for fname in `find ./Chapter06 -name "[0-9]*.py"`;do jupytext --set-formats ipynb,py --execute $fname; done;
             for fname in `find ./Chapter06 -name "[0-9]*.ipynb"`;do jupyter nbconvert $fname --to markdown; done;
