@@ -34,4 +34,4 @@ jobs:
             source $HOME/miniconda/bin/activate
             conda activate tfrl-cookbook
             python -m pip install jupytext
-            python -m ipykernel install --user --name=tfrl-cookbook 
+            python -m ipykernel install --user --name=tfrl-cookbook
