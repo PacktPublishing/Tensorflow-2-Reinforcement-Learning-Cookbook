@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  setup:
+  gen-notebooks :
     runs-on: ubuntu-20.04
     steps:
       # Checkout code to $GITHUB_WORKSPACE
@@ -61,9 +61,21 @@ jobs:
 
       - name: Ch6 Convert parse_args() to parse_args([]) to allow ipynb to execute
         run: find ./Chapter06 -name "[0-9]*.py" -exec sed -i 's/parser.parse_args()/parser.parse_args(\[\])/g' {} \;
-      - name: Ch6 generate .ipynb & .md
+      # - name: Ch6 generate .ipynb & .md
+      #  run: |
+      #      source $HOME/miniconda/bin/activate
+      #      conda activate tfrl-cookbook
+      #      for fname in `find ./Chapter06 -name "[0-9]*.py"`;do jupytext --set-formats ipynb,py --execute $fname; done;
+      #      for fname in `find ./Chapter06 -name "[0-9]*.ipynb"`;do jupyter nbconvert $fname --to markdown; done;
+
+      - name: Commit notebooks
         run: |
-            source $HOME/miniconda/bin/activate
-            conda activate tfrl-cookbook
-            for fname in `find ./Chapter06 -name "[0-9]*.py"`;do jupytext --set-formats ipynb,py --execute $fname; done;
-            for fname in `find ./Chapter06 -name "[0-9]*.ipynb"`;do jupyter nbconvert $fname --to markdown; done;
+            git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git config --local user.name "github-actions[bot]"
+            git add *.ipynb
+            git commit -m "Updated notebooks"
+      - name: Push notebooks
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: refs/heads/notebooks
