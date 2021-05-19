@@ -1,18 +1,18 @@
-# GitHub workflow for TensorFlow2 Reinforcement Learning Cookbook
+# GitHub workflow for TensorFlow2 Reinforcement Learning Cookbook | Praveen Palanisamy
 name: TFRL-Cookbook-CI
 
 on:
-  # Enable workflow trigger on push/PR to master when the workflow is finalized
-  # push:
-  #  branches: [ master ]
-  # pull_request:
-  #  branches: [ master ]
+  # Enable workflow trigger on push/PR to master
+  push:
+    branches: [ master ]
+    pull_request:
+  branches: [ master ]
 
   # Allows to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
-  gen-notebooks :
+  Gen-notebooks :
     runs-on: ubuntu-20.04
     steps:
       # Checkout code to $GITHUB_WORKSPACE
@@ -78,4 +78,4 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: refs/heads/notebooks
+          branch: refs/heads/master
