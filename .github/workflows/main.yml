@@ -2,13 +2,11 @@
 name: TFRL-Cookbook-CI
 
 on:
-  # Enable workflow trigger on push/PR to master
+  # Enable workflow trigger for push events on main/master branch
   push:
-    branches: [ master ]
-    pull_request:
-  branches: [ master ]
-
-  # Allows to run this workflow manually from the Actions tab
+    branches:
+      - master
+  # Allow running this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
