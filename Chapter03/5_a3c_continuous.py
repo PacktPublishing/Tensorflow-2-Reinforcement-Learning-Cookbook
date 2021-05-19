@@ -241,4 +241,4 @@ class A3CWorker(Thread):
 if __name__ == "__main__":
     env_name = "MountainCarContinuous-v0"
     agent = Agent(env_name, args.num_workers)
-    agent.train()
+    agent.train(max_episodes=2)  # Increase max_episodes value

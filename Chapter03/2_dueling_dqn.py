@@ -142,4 +142,4 @@ class Agent:
 if __name__ == "__main__":
     env = gym.make("CartPole-v0")
     agent = Agent(env)
-    agent.train(max_episodes=1000)
+    agent.train(max_episodes=2)  # Increase max_episodes value

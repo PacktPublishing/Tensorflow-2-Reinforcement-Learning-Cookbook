@@ -113,7 +113,8 @@ def train(agent: Agent, env: gym.Env, episodes: int, render=True):
 
 if __name__ == "__main__":
     agent = Agent()
-    episodes = 500
+    episodes = 2  #  Increase number of episodes to train
     env = gym.make("MountainCar-v0")
-    train(agent, env, episodes)
+    # Set render=True to visualize Agent's actions in the env
+    train(agent, env, episodes, render=False)
     env.close()

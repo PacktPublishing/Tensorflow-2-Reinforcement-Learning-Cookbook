@@ -102,7 +102,6 @@ dependencies:
     - docutils==0.16
     - entrypoints==0.3
     - filelock==3.0.12
-    - fire==0.3.1
     - future==0.18.2
     - gast==0.3.3
     - glcontext==2.2.0

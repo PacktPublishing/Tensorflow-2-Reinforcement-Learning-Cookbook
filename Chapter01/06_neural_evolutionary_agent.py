@@ -13,7 +13,6 @@ from tensorflow.keras import layers
 from tqdm import tqdm
 
 import envs  # Required to register Gridworld-v0 env
-import fire
 
 
 class Brain(keras.Model):
@@ -207,4 +206,4 @@ def train(
 
 
 if __name__ == "__main__":
-    fire.Fire(train)
+    train(num_epochs=2)  # Increase value of num_epochs
