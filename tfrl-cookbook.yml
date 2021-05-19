@@ -115,7 +115,7 @@ dependencies:
     - gpustat==0.6.0
     - gputil==1.4.0
     - grpcio==1.29.0
-    - gym==0.17.2
+    - gym==0.18.3
     - gym3==0.3.3
     - h5py==2.10.0
     - hiredis==1.1.0
@@ -188,7 +188,7 @@ dependencies:
     - pycparser==2.20
     - pydot==1.4.1
     - pydotplus==2.0.2
-    - pyglet==1.5.0
+    - pyglet==1.5.15
     - pygments==2.6.1
     - pyparsing==2.4.7
     - pyrsistent==0.16.0
