@@ -51,7 +51,9 @@ If you use, derive, customize any of the recipes in your work, please cite this 
 
 It is advised to create and use a Python virtual environment named `tfrl-cookbook` to install the packages and run the code in this book. A Miniconda or Anaconda installation for Python virtual environment management is recommended. Follow these steps to set up a conda pyton virtual environment using `miniconda`:
 
-1. Install system dependencies:`sudo apt install -y make cmake ffmpeg`
+1. Install system dependencies:
+   - Linux (Ubuntu/Debian): `sudo apt install -y make cmake ffmpeg`
+   - Mac OSX: `brew install make cmake ffmpeg`
 2. Install miniconda: `wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && bash -b -p ${HOME}/miniconda3`
 3. Setup conda python virtual environment: `bash && conda env create -f tfrl-cookbook.yml -n "tfrl-cookbook"`
    You are all set!
