@@ -34,10 +34,10 @@ def calculate_values(state, action):
     slip_action = env.slip_action_map[action]
     env.set_state(state)
     slip_next_state, slip_reward, _ = env.step(slip_action, slip=False)
-    transitions.append((slip_reward, slip_next_state, env.slip))
+    transitions.append((slip_reward, slip_next_state, env.slip_probability))
     env.set_state(state)
     next_state, reward, _ = env.step(action, slip=False)
-    transitions.append((reward, next_state, 1 - env.slip))
+    transitions.append((reward, next_state, 1 - env.slip_probability))
     for reward, next_state, pi in transitions:
         v_sum += pi * (reward + discount * state_values[next_state])
     return v_sum
