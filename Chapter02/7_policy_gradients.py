@@ -58,7 +58,7 @@ class Agent(object):
         for r in rewards:
             discounted_reward = r + self.gamma * discounted_reward
             discounted_rewards.append(discounted_reward)
-            discounted_rewards.reverse()
+        discounted_rewards.reverse()
 
         for state, reward, action in zip(states, discounted_rewards, actions):
             with tf.GradientTape() as tape:
