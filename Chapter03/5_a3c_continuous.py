@@ -210,9 +210,7 @@ class A3CWorker(Thread):
                     actions = np.array([action.squeeze() for action in action_batch])
                     rewards = np.array([reward.squeeze() for reward in reward_batch])
                     next_v_value = self.critic.model.predict(next_state)
-                    td_targets = self.n_step_td_target(
-                        (rewards + 8) / 8, next_v_value, done
-                    )
+                    td_targets = self.n_step_td_target(rewards, next_v_value, done)
                     advantages = td_targets - self.critic.model.predict(states)
 
                     actor_loss = self.global_actor.train(states, actions, advantages)

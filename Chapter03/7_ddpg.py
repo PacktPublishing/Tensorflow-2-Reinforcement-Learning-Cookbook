@@ -173,7 +173,7 @@ class Agent:
             if dones[i]:
                 targets[i] = rewards[i]
             else:
-                targets[i] = args.gamma * q_values[i]
+                targets[i] = rewards[i] + args.gamma * q_values[i]
         return targets
 
     def add_ou_noise(self, x, rho=0.15, mu=0, dt=1e-1, sigma=0.2, dim=1):

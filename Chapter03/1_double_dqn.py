@@ -122,7 +122,7 @@ class Agent:
                     action = self.model.get_action(observation)
                     next_observation, reward, done, _ = self.env.step(action)
                     self.buffer.store(
-                        observation, action, reward * 0.01, next_observation, done
+                        observation, action, reward, next_observation, done
                     )
                     episode_reward += reward
                     observation = next_observation
