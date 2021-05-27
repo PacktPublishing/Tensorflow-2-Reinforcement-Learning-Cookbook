@@ -103,7 +103,7 @@ class Agent:
     def replay_experience(self):
         for _ in range(10):
             states, actions, rewards, next_states, done = self.buffer.sample()
-            targets = self.target_model.predict(states)
+            targets = self.model.predict(states)
             next_q_values = self.target_model.predict(next_states)[
                 range(args.batch_size),
                 np.argmax(self.model.predict(next_states), axis=1),
