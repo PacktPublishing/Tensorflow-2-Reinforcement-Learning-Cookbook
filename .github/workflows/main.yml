@@ -66,7 +66,7 @@ jobs:
             source $HOME/miniconda/bin/activate
             conda activate tfrl-cookbook
             for fname in `find ./Chapter04 -name "*.py"`;do jupytext --set-formats ipynb,py --execute $fname; done;
-            for fname in `find ./Chapter04 -name "*.py"`;do jupytext nbconvert $fname --to markdown; done;
+            for fname in `find ./Chapter04 -name "*.ipynb"`;do jupytext nbconvert $fname --to markdown; done;
 
       - name: Ch5 Use relative path to avoid __file__ not defined err within Jupyter notebook instance
         run: find ./Chapter05 -name "*.py" -exec sed -i '/__file__/c\        data_dir = \"data\"' {} \;
@@ -75,7 +75,7 @@ jobs:
             source $HOME/miniconda/bin/activate
             conda activate tfrl-cookbook
             for fname in `find ./Chapter05 -name "*.py"`;do jupytext --set-formats ipynb,py --execute $fname; done;
-            for fname in `find ./Chapter05 -name "*.py"`;do jupytext nbconvert $fname --to markdown; done;
+            for fname in `find ./Chapter05 -name "*.ipynb"`;do jupytext nbconvert $fname --to markdown; done;
 
       - name: Ch6 Convert parse_args() to parse_args([]) to allow ipynb to execute
         run: find ./Chapter06 -name "[0-9]*.py" -exec sed -i 's/parser.parse_args()/parser.parse_args(\[\])/g' {} \;
