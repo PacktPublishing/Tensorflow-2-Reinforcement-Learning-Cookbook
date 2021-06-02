@@ -193,7 +193,8 @@ class StockTradingVisualEnv(gym.Env):
 if __name__ == "__main__":
     env = StockTradingVisualEnv()
     obs = env.reset()
-    for _ in range(600):
+    num_episodes = 2  # Increase num_episodes
+    for _ in range(num_episodes):
         action = env.action_space.sample()
         next_obs, reward, done, _ = env.step(action)
         env.render()
