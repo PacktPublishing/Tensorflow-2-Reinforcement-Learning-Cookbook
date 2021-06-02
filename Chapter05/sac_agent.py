@@ -376,6 +376,10 @@ if __name__ == "__main__":
 
     # sac.load_actor("sac_actor_episodexyz.h5")
     # sac.load_critic("sac_critic_episodexyz.h5")
-    sac.train(max_epochs=100000, random_epochs=10000, save_freq=50)
+
+    sac.train(max_epochs=3, random_epochs=1, save_freq=2)
+    # Comment above line, uncomment the below line for reasonable training
+    # sac.train(max_epochs=100000, random_epochs=10000, save_freq=50)
+
     # reward = sac.test()
     # print(reward)
