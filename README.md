@@ -75,3 +75,7 @@ We also provide a PDF file that has color images of the screenshots/diagrams use
 ## Get to Know the Author
 
 **Praveen Palanisamy** works on advancing AI for autonomous systems as a senior AI engineer at Microsoft. In the past, he has developed AI algorithms for autonomous vehicles using deep reinforcement learning, and has worked with start-ups and in academia to build autonomous robots and intelligent systems. He is the inventor of more than 15 patents on learning-based AI systems. He is the author of _HOIAWOG: Hands-On Intelligent Agents with OpenAI Gym_, which provides a step-by-step guide to developing deep RL agents to solve complex problems from scratch. He has a master's in robotics from Carnegie Mellon University.
+### Download a free PDF
+
+ <i>If you have already purchased a print or Kindle version of this book, you can get a DRM-free PDF version at no cost.<br>Simply click on the link to claim your free PDF.</i>
+<p align="center"> <a href="https://packt.link/free-ebook/9781838982546">https://packt.link/free-ebook/9781838982546 </a> </p>
