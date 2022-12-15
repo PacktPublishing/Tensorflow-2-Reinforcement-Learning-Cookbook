@@ -1,3 +1,15 @@
+
+### Get this product for $5
+
+<i>Packt is having its biggest sale of the year. Get this eBook or any other book, video, or course that you like just for $5 each</i>
+
+
+<b><p align='center'>[Buy now](https://packt.link/9781838982546)</p></b>
+
+
+<b><p align='center'>[Buy similar titles for just $5](https://subscription.packtpub.com/search)</p></b>
+
+
 # TensorFlow 2 Reinforcement Learning Cookbook
 
 <a href="https://www.packtpub.com/product/tensorflow-2-reinforcement-learning-cookbook/9781838982546?utm_source=github&utm_medium=repository&utm_campaign=9781838982546"><img src="https://static.packt-cdn.com/products/9781838982546/cover/smaller" alt="TensorFlow 2 Reinforcement Learning Cookbook" height="256px" align="right"></a>
