@@ -130,7 +130,7 @@ class SAC(object):
         log_prob_u = tfp.distributions.Normal(loc=mean, scale=std).log_prob(raw_actions)
         actions = tf.math.tanh(raw_actions)
 
-        log_prob = tf.reduce_sum(log_prob_u - tf.math.log(1 - actions ** 2 + eps))
+        log_prob = tf.reduce_sum(log_prob_u - tf.math.log(1 - actions ** 2 + eps), axis=1)
 
         actions = actions * self.action_bound + self.action_shift
 
